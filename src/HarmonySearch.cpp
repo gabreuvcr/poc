@@ -2,53 +2,45 @@
 
 #include "HarmonySearch.hpp"
 
-HarmonySearch::HarmonySearch(int W, int H, int HM_size, double sensor_radius, double sensor_uncertainty_radius) {
+HarmonySearch::HarmonySearch(
+    int W,
+    int H,
+    int HM_size,
+    double sensor_radius,
+    double sensor_uncertainty_radius,
+    std::vector<PointOfInterest> POIs
+) {
     this->W = W;
     this->H = H;
     this->HM_size = HM_size;
     this->sensor_radius = sensor_radius;
     this->sensor_uncertainty_radius = sensor_uncertainty_radius;
-
-    this->x_lower = sensor_radius - sensor_uncertainty_radius;
-    this->y_lower = sensor_radius - sensor_uncertainty_radius;
-    this->x_upper = W - (sensor_radius - sensor_uncertainty_radius);
-    this->y_upper = H - (sensor_radius - sensor_uncertainty_radius);
+    this->POIs = POIs;
 
     double max_radius = sensor_radius + sensor_uncertainty_radius;
     double min_radius = sensor_radius - sensor_uncertainty_radius;
 
+    this->x_lower = min_radius;
+    this->y_lower = min_radius;
+    this->x_upper = W - (min_radius);
+    this->y_upper = H - (min_radius);
+
     this->min_sensors = ceil((W / (2 * max_radius)) * (H / (2 * max_radius)));
     this->max_sensors = ceil((W / (2 * min_radius)) * (H / (2 * min_radius)));
-
-    this->init_rng();
-}
-
-void HarmonySearch::init_rng() {
-    std::random_device rd;
-    this->rng = std::mt19937(rd());
-    this->dist_0_1 = std::uniform_real_distribution<>(0, 1);
-}
-
-double HarmonySearch::random() {
-    return this->dist_0_1(this->rng);
-}
-
-std::pair<double, double> HarmonySearch::random_point() {
-    double x = this->x_lower + (this->x_upper - this->x_lower) * this->random();
-    double y = this->y_lower + (this->y_upper - this->y_lower) * this->random();
-    return std::make_pair(x, y);
 }
 
 void HarmonySearch::init_harmony_memory() {
     HM.resize(this->HM_size, std::vector<Sensor>(this->max_sensors, Sensor()));
 
     for (int vec = 0; vec < this->HM.size(); vec++) {
-        int HM_vector_size = round(this->min_sensors + (this->max_sensors - this->min_sensors) * this->random());
+        int HM_vector_size = Random::random_value(this->min_sensors, this->max_sensors);
 
         for (int s = 0; s < HM_vector_size; s++) {
-            this->HM[vec][s] = Sensor(this->random_point());
+            double x = Random::random_value(this->x_lower, this->x_upper);
+            double y = Random::random_value(this->y_lower, this->y_upper);
+            this->HM[vec][s] = Sensor(x, y);
         }
-        std::shuffle(begin(this->HM[vec]), end(this->HM[vec]), this->rng);
+        std::shuffle(begin(this->HM[vec]), end(this->HM[vec]), Random::rng);
         this->num_sensors.push_back(HM_vector_size);
     }
 }

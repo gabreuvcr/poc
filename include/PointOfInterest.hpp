@@ -1,5 +1,5 @@
-#ifndef POI_H
-#define POI_H
+#ifndef POINT_OF_INTEREST_H
+#define POINT_OF_INTEREST_H
 
 #include <iostream>
 #include <vector>
@@ -12,6 +12,7 @@ class PointOfInterest {
         PointOfInterest(std::pair<double, double> point);
 
         static std::vector<PointOfInterest> generate_pois_from_grid(int W, int H, int cel_size);
+        static int read_pois(std::vector<PointOfInterest> &POIs, int W, int H);
 };
 
 #endif

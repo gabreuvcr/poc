@@ -6,40 +6,28 @@
 #include "PointOfInterest.hpp"
 
 int main(int argc, char* argv[]) {
-    int W = 50;
-    int H = 50;
-    int HM_size = 5;
-    double sensor_radius = 10;
-    double sensor_uncertainty_radius = 5;
+    int W, H, HM_size;
+    double sensor_radius, sensor_uncertainty_radius;
+    std::string type;
 
-    std::vector<PointOfInterest> pois;
+    std::cin >> W >> H >> HM_size;
+    std::cin >> sensor_radius >> sensor_uncertainty_radius;
 
-    if (argc == 3 && strcmp(argv[1], "-g") == 0) {
-        int cel_size = atoi(argv[2]);
+    std::vector<PointOfInterest> POIs;
 
-        if (W % cel_size != 0 || H % cel_size != 0 || cel_size < 1 || cel_size > W || cel_size > H) {
-            std::cout << "Invalid <cel_size> value" << std::endl;
-            return 1;
-        }
-
-        pois = PointOfInterest::generate_pois_from_grid(W, H, cel_size);
-
-        std::cout << "Generated " << pois.size() << " POIs" << std::endl;
-        for (PointOfInterest poi : pois) {
-            std::cout << "(" << poi.x << ", " << poi.y << ") ";
-        }
-        std::cout << std::endl;
-
-    } else {
-        std::cout << "Usage: " << argv[0] << " -g <cel_size>" << std::endl;
-        std::cout << "Wrong arguments" << std::endl;
-        return 1;
+    if (PointOfInterest::read_pois(POIs, W, H) == -1) {
+        std::cout << "Invalid input" << std::endl;
     }
 
-    HarmonySearch hs(W, H, HM_size, sensor_radius, sensor_uncertainty_radius);
+    for (PointOfInterest poi : POIs) {
+        std::cout << "(" << poi.x << ", " << poi.y << ") ";
+    }
+    std::cout << std::endl;
+    
+    HarmonySearch hs = HarmonySearch(W, H, HM_size, sensor_radius, sensor_uncertainty_radius, POIs);
     
     hs.init_harmony_memory();
     hs.cout_harmony_memory();
-    
+
     return 0;
 }

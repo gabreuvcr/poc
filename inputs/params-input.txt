@@ -2,7 +2,6 @@ W H HM_size
 sensor_radius sensor_uncertainty_radius
 G 5
 
-
 W H HM_size
 sensor_radius sensor_uncertainty_radius
 P 3
