@@ -1,0 +1,11 @@
+W H HM_size
+sensor_radius sensor_uncertainty_radius
+G 5
+
+
+W H HM_size
+sensor_radius sensor_uncertainty_radius
+P 3
+x1 y1
+x2 y2
+x3 y3

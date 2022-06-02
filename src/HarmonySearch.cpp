@@ -1,5 +1,6 @@
-#include "HarmonySearch.h"
 #include <cmath>
+
+#include "HarmonySearch.hpp"
 
 HarmonySearch::HarmonySearch(int W, int H, int HM_size, double sensor_radius, double sensor_uncertainty_radius) {
     this->W = W;
@@ -39,13 +40,13 @@ std::pair<double, double> HarmonySearch::random_point() {
 }
 
 void HarmonySearch::init_harmony_memory() {
-    HM.resize(this->HM_size, std::vector<sensor>(this->max_sensors, sensor()));
+    HM.resize(this->HM_size, std::vector<Sensor>(this->max_sensors, Sensor()));
 
     for (int vec = 0; vec < this->HM.size(); vec++) {
         int HM_vector_size = round(this->min_sensors + (this->max_sensors - this->min_sensors) * this->random());
 
         for (int s = 0; s < HM_vector_size; s++) {
-            this->HM[vec][s] = sensor(this->random_point());
+            this->HM[vec][s] = Sensor(this->random_point());
         }
         std::shuffle(begin(this->HM[vec]), end(this->HM[vec]), this->rng);
         this->num_sensors.push_back(HM_vector_size);

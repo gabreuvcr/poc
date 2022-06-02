@@ -6,12 +6,8 @@
 #include <random>
 #include <algorithm>
 
-typedef struct sensor {
-    double x, y;
-    sensor() : x(-1), y(-1) {}
-    sensor(double _x, double _y) : x(_x), y(_y) {}
-    sensor(std::pair<double, double> point) : x(point.first), y(point.second) {}
-} sensor;
+#include "Sensor.hpp"
+#include "PointOfInterest.hpp"
 
 class HarmonySearch {
     private:
@@ -24,7 +20,7 @@ class HarmonySearch {
         std::pair<double, double> random_point();
 
     public:
-        std::vector<std::vector<sensor>> HM;
+        std::vector<std::vector<Sensor>> HM;
         int W, H, HM_size, max_sensors, min_sensors;
         double sensor_radius, sensor_uncertainty_radius;
         double x_lower, x_upper, y_lower, y_upper;
