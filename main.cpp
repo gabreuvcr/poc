@@ -3,28 +3,28 @@
 #include <string.h>
 
 #include "HarmonySearch.hpp"
+#include "HarmonySearchConfig.hpp"
 #include "PointOfInterest.hpp"
+#include "Sensor.hpp"
 
 int main(int argc, char* argv[]) {
-    int W, H, HM_size;
-    double sensor_radius, sensor_uncertainty_radius;
-    std::string type;
+    HarmonySearchConfig config = HarmonySearchConfig();
 
-    std::cin >> W >> H >> HM_size;
-    std::cin >> sensor_radius >> sensor_uncertainty_radius;
+    std::cin >> config.W >> config.H >> config.hm_size;
+    std::cin >> config.sensor_radius >> config.sensor_uncertainty_radius;
 
-    std::vector<PointOfInterest> POIs;
-
-    if (PointOfInterest::read_pois(POIs, W, H) == -1) {
+    if (PointOfInterest::read_pois(config.pois, config.W, config.H) == -1) {
         std::cout << "Invalid input" << std::endl;
     }
 
-    for (PointOfInterest poi : POIs) {
+    for (PointOfInterest poi : config.pois) {
         std::cout << "(" << poi.x << ", " << poi.y << ") ";
     }
     std::cout << std::endl;
-    
-    HarmonySearch hs = HarmonySearch(W, H, HM_size, sensor_radius, sensor_uncertainty_radius, POIs);
+
+    Sensor::sensor_radius = config.sensor_radius;
+
+    HarmonySearch hs = HarmonySearch(config);
     
     hs.init_harmony_memory();
     hs.cout_harmony_memory();

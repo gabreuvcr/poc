@@ -1,9 +1,6 @@
 #include "Random.hpp"
 
 namespace Random {
-    std::mt19937 rng = std::mt19937(std::random_device{}());
-    std::uniform_real_distribution<> dist_0_1 = std::uniform_real_distribution<>(0, 1);
-    
     double random() {
         return dist_0_1(rng);
     }
@@ -15,4 +12,7 @@ namespace Random {
     int random_value(int min, int max) {
         return round(min + (max - min) * random());
     }
+
+    std::mt19937 rng = std::mt19937(std::random_device{}());
+    std::uniform_real_distribution<> dist_0_1 = std::uniform_real_distribution<>(0, 1);
 }

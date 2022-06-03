@@ -1,4 +1,5 @@
 #include "PointOfInterest.hpp"
+#include "Sensor.hpp"
 
 PointOfInterest::PointOfInterest() {
     this->x = -1; this->y = -1;
@@ -12,49 +13,72 @@ PointOfInterest::PointOfInterest(std::pair<double, double> point) {
     this->x = point.first; this->y = point.second;
 }
 
-std::vector<PointOfInterest> PointOfInterest::generate_pois_from_grid(int W, int H, int cel_size) {
-    std::vector<PointOfInterest> POIs;
+int PointOfInterest::num_coverage(std::vector<Sensor> sensors) {
+    int num_covered = 0;
+    for (Sensor sensor : sensors) {
+        if (is_covered(sensor)) num_covered++;
+    }
+    return num_covered;
+}
+
+bool PointOfInterest::is_covered(Sensor sensor) {
+    return (sensor.x - x) * (sensor.x - x) + (sensor.y - y) * (sensor.y - y) <= sensor.sensor_radius * sensor.sensor_radius;
+}
+
+std::vector<PointOfInterest> PointOfInterest::_generate_pois_from_grid(int W, int H, int cel_size) {
+    std::vector<PointOfInterest> pois;
     for (int h = cel_size; h <= H; h += cel_size) {
         for (int w = cel_size; w <= W; w += cel_size) {
             double x = (double)(w + (w - cel_size)) / 2;
             double y = (double)(h + (h - cel_size)) / 2;
-            POIs.push_back(PointOfInterest(x, y));
+            pois.push_back(PointOfInterest(x, y));
         }
     }
-    return POIs;
+    return pois;
 }
 
-int PointOfInterest::read_pois(std::vector<PointOfInterest> &POIs, int W, int H) {
+int PointOfInterest::_read_type_grid(std::vector<PointOfInterest> &pois, int W, int H) {
+    int cel_size; std::cin >> cel_size;
+    std::cout << "cel_size: " << cel_size << std::endl;
+    std::cout << W << std::endl;
+    std::cout << H << std::endl;
+
+    if (W % cel_size != 0 || H % cel_size != 0 || cel_size < 1 || cel_size > W || cel_size > H) {
+        std::cout << "Invalid cel_size value" << std::endl;
+        return -1;
+    }
+
+    pois = PointOfInterest::_generate_pois_from_grid(W, H, cel_size);
+
+    std::cout << "Generated " << pois.size() << " pois" << std::endl;
+    return 1;
+}
+
+int PointOfInterest::_read_type_points(std::vector<PointOfInterest> &pois, int W, int H) {
+    int num_pois; std::cin >> num_pois;
+
+    for (int p = 0; p < num_pois; p++) {
+        double x, y; std::cin >> x >> y;
+        if (x < 0 || x > W || y < 0 || y > H) {
+            std::cout << "Invalid coordinate value" << std::endl;
+            return -1;
+        }
+        pois.push_back(PointOfInterest(x, y));
+    }
+    std::cout << "Read " << pois.size() << " pois" << std::endl;
+    return 1;
+}
+
+int PointOfInterest::read_pois(std::vector<PointOfInterest> &pois, int W, int H) {
     std::string type; std::cin >> type;
 
     if (type != "G" && type != "P") return -1;
 
     if (type == "G") {
-        int cel_size; std::cin >> cel_size;
-
-        if (W % cel_size != 0 || H % cel_size != 0 || cel_size < 1 || cel_size > W || cel_size > H) {
-            std::cout << "Invalid cel_size value" << std::endl;
-            return -1;
-        }
-
-        POIs = PointOfInterest::generate_pois_from_grid(W, H, cel_size);
-
-        std::cout << "Generated " << POIs.size() << " POIs" << std::endl;
-
+        return PointOfInterest::_read_type_grid(pois, W, H);
     } else if (type == "P") {
-        int num_pois; std::cin >> num_pois;
-
-        for (int p = 0; p < num_pois; p++) {
-            double x, y; std::cin >> x >> y;
-            if (x < 0 || x > W || y < 0 || y > H) {
-                std::cout << "Invalid coordinate value" << std::endl;
-                return -1;
-            }
-            POIs.push_back(PointOfInterest(x, y));
-        }
-        std::cout << "Read " << POIs.size() << " POIs" << std::endl;
-
+        return PointOfInterest::_read_type_points(pois, W, H);
     }
 
-    return 1;
+    return -1;
 }
