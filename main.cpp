@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
     std::cin >> config.sensor_radius >> config.sensor_uncertainty_radius;
 
     if (PointOfInterest::read_pois(config.pois, config.W, config.H) == -1) {
-        std::cout << "Invalid input" << std::endl;
+        throw std::runtime_error("Invalid input");
     }
 
     for (PointOfInterest poi : config.pois) {
