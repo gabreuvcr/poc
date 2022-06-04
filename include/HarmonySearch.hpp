@@ -12,14 +12,17 @@
 class HarmonySearch {
     private:
         std::vector<int> num_sensors;
-        std::vector<int> num_k_coverage;
+        std::vector<double> coverage_ratios;
         std::vector<double> objectives;
 
         double objective(int sensor_index);
+
     public:
         std::vector<std::vector<Sensor>> HM;
         HarmonySearchConfig config;
         int max_sensors, min_sensors;
+        int worst_sensor_index;
+        int best_sensor_index;
         double x_lower, x_upper, y_lower, y_upper;
 
         HarmonySearch(HarmonySearchConfig config);

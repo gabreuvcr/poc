@@ -18,8 +18,8 @@ class PointOfInterest {
         PointOfInterest(double x, double y);
         PointOfInterest(std::pair<double, double> point);
 
-        int num_coverage(std::vector<Sensor> sensors);
         bool is_covered(Sensor sensor);
+        bool is_covered_by_at_least_one(std::vector<Sensor> sensors);
 
         static int read_pois(std::vector<PointOfInterest> &pois, int w, int h);
 };

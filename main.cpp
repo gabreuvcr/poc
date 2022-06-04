@@ -17,12 +17,13 @@ int main(int argc, char* argv[]) {
         throw std::runtime_error("Invalid input");
     }
 
-    for (PointOfInterest poi : config.pois) {
-        std::cout << "(" << poi.x << ", " << poi.y << ") ";
-    }
-    std::cout << std::endl;
+    // for (PointOfInterest poi : config.pois) {
+    //     std::cout << "(" << poi.x << ", " << poi.y << ") ";
+    // }
+    // std::cout << std::endl;
 
     Sensor::sensor_radius = config.sensor_radius;
+    Sensor::sensor_uncertainty_radius = config.sensor_uncertainty_radius;
 
     HarmonySearch hs = HarmonySearch(config);
     
@@ -31,3 +32,4 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
+

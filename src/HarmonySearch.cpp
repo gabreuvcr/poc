@@ -16,23 +16,26 @@ HarmonySearch::HarmonySearch(HarmonySearchConfig config) {
 
     this->min_sensors = ceil((config.W / (2 * max_radius)) * (config.H / (2 * max_radius)));
     this->max_sensors = ceil((config.W / (2 * min_radius)) * (config.H / (2 * min_radius)));
+
+    this->worst_sensor_index = -1;
+    this->best_sensor_index = -1;
 }
 
 double HarmonySearch::objective(int sensors_index) {
     int n_sensors = num_sensors[sensors_index];
-    int n_k_coverage = num_k_coverage[sensors_index];
+    double c_ratio = coverage_ratios[sensors_index];
+    double min_dist_between_sensors = Sensor::min_dist(HM[sensors_index], config.W, config.H);
+    const int k_const = 157;
 
-    return ((double)1/n_sensors) * n_k_coverage;
+    return ((double)1/n_sensors) * c_ratio * min_dist_between_sensors * k_const;
 }
 
-int min_coverage(std::vector<Sensor> sensors, std::vector<PointOfInterest> poi) {
-    int min_coverage = 0x3F3F3F3F;
-    for (PointOfInterest p : poi) {
-        int covered = p.num_coverage(sensors);
-        min_coverage = std::min(min_coverage, covered);
+double calc_coverage_ratio(std::vector<Sensor> sensors, std::vector<PointOfInterest> pois) {
+    int num_covered_pois = 0;
+    for (PointOfInterest p : pois) {
+        if (p.is_covered_by_at_least_one(sensors)) num_covered_pois++;
     }
-
-    return min_coverage;
+    return (double)num_covered_pois / pois.size();
 }
 
 void HarmonySearch::init_harmony_memory() {
@@ -48,11 +51,16 @@ void HarmonySearch::init_harmony_memory() {
         }
         std::shuffle(begin(HM[vec]), end(HM[vec]), Random::rng);
 
-
-        int min_k_coverage = min_coverage(HM[vec], config.pois);
-        num_k_coverage.push_back(min_k_coverage);
         num_sensors.push_back(hm_vector_size);
+        coverage_ratios.push_back(calc_coverage_ratio(HM[vec], config.pois));
         objectives.push_back(objective(vec));
+
+        if (worst_sensor_index == -1 || objectives[vec] < objectives[worst_sensor_index]) {
+            worst_sensor_index = vec;
+        }
+        if (best_sensor_index == -1 || objectives[vec] > objectives[best_sensor_index]) {
+            best_sensor_index = vec;
+        }
     }
 }
 
@@ -63,22 +71,27 @@ void HarmonySearch::cout_harmony_memory() {
     std::cout << "min_senors: " << min_sensors << std::endl;
     std::cout << "max_sensors: " << max_sensors << std::endl;
 
-    // for (int vec = 0; vec < HM.size(); vec++) {
-    //     std::cout << "> " << num_sensors[vec] << " sensors: " << std::endl;
-    //     for (int s = 0; s < HM[vec].size(); s++) {
-    //         double x = HM[vec][s].x;
-    //         double y = HM[vec][s].y;
-    //         if (x == -1 || y == -1) {
-    //             std::cout << "." << " ";
-    //         } else {
-    //             std::cout << "(" << x << ", " << y << ") ";
-    //         }
-    //         if (s % 5 == 0) std::cout << std::endl;
-    //     }
-    //     std::cout << std::endl << std::endl;
-    // }
+    for (int vec = 0; vec < HM.size(); vec++) {
+        std::cout << "> " << num_sensors[vec] << " sensors: " << std::endl;
+        for (int s = 0; s < HM[vec].size(); s++) {
+            double x = HM[vec][s].x;
+            double y = HM[vec][s].y;
+            if (x == -1 || y == -1) {
+                std::cout << "." << " ";
+            } else {
+                std::cout << "(" << x << ", " << y << ") ";
+            }
+            if (s % 5 == 0) std::cout << std::endl;
+        }
+        std::cout << std::endl << std::endl;
+    }
     
     for (int vec = 0; vec < HM.size(); vec++) {
-        std::cout << "k-coverage: " << num_k_coverage[vec] << " " << "sensors: " << num_sensors[vec] << " " << "objective: " << objectives[vec] << std::endl;
+        std::cout << "coverage ratios: " << coverage_ratios[vec] << " ";
+        std::cout << "sensors: " << num_sensors[vec] << " ";
+        std::cout << "objective: " << objectives[vec] << " ";
+        if (vec == best_sensor_index) std::cout << "<best>";
+        if (vec == worst_sensor_index) std::cout << "<worst>";
+        std::cout << std::endl;
     }
 }

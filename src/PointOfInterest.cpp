@@ -13,16 +13,15 @@ PointOfInterest::PointOfInterest(std::pair<double, double> point) {
     this->x = point.first; this->y = point.second;
 }
 
-int PointOfInterest::num_coverage(std::vector<Sensor> sensors) {
-    int num_covered = 0;
-    for (Sensor sensor : sensors) {
-        if (is_covered(sensor)) num_covered++;
-    }
-    return num_covered;
-}
-
 bool PointOfInterest::is_covered(Sensor sensor) {
     return (sensor.x - x) * (sensor.x - x) + (sensor.y - y) * (sensor.y - y) <= sensor.sensor_radius * sensor.sensor_radius;
+}
+
+bool PointOfInterest::is_covered_by_at_least_one(std::vector<Sensor> sensors) {
+    for (Sensor sensor : sensors) {
+        if (is_covered(sensor)) return true;
+    }
+    return false;
 }
 
 std::vector<PointOfInterest> PointOfInterest::_generate_pois_from_grid(int W, int H, int cel_size) {
@@ -39,9 +38,9 @@ std::vector<PointOfInterest> PointOfInterest::_generate_pois_from_grid(int W, in
 
 int PointOfInterest::_read_type_grid(std::vector<PointOfInterest> &pois, int W, int H) {
     int cel_size; std::cin >> cel_size;
-    std::cout << "cel_size: " << cel_size << std::endl;
-    std::cout << W << std::endl;
-    std::cout << H << std::endl;
+    // std::cout << W << " width" << std::endl;
+    // std::cout << H << " height" << std::endl;
+    // std::cout << "cel_size: " << cel_size << std::endl;
 
     if (W % cel_size != 0 || H % cel_size != 0 || cel_size < 1 || cel_size > W || cel_size > H) {
         std::cout << "Invalid cel_size value" << std::endl;
@@ -50,7 +49,7 @@ int PointOfInterest::_read_type_grid(std::vector<PointOfInterest> &pois, int W, 
 
     pois = PointOfInterest::_generate_pois_from_grid(W, H, cel_size);
 
-    std::cout << "Generated " << pois.size() << " pois" << std::endl;
+    // std::cout << "Generated " << pois.size() << " pois" << std::endl;
     return 1;
 }
 
@@ -65,7 +64,7 @@ int PointOfInterest::_read_type_points(std::vector<PointOfInterest> &pois, int W
         }
         pois.push_back(PointOfInterest(x, y));
     }
-    std::cout << "Read " << pois.size() << " pois" << std::endl;
+    // std::cout << "Read " << pois.size() << " pois" << std::endl;
     return 1;
 }
 
