@@ -1,10 +1,8 @@
-W H HM_size
-sensor_radius sensor_uncertainty_radius
-G 5
+W H HM_size sensor_radius num_iterations
+G cel_size
 
-W H HM_size
-sensor_radius sensor_uncertainty_radius
-P 3
+W H HM_size sensor_radius num_iterations
+P num_points
 x1 y1
 x2 y2
 x3 y3

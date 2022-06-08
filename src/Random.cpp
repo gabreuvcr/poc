@@ -10,7 +10,7 @@ namespace Random {
     }
 
     int random_value(int min, int max) {
-        return round(min + (max - min) * random());
+        return floor(min + (max - min + 1) * random());
     }
 
     std::mt19937 rng = std::mt19937(std::random_device{}());

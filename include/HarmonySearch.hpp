@@ -15,20 +15,21 @@ class HarmonySearch {
         std::vector<double> coverage_ratios;
         std::vector<double> objectives;
 
-        double objective(int sensor_index);
+        double calculate_objective(std::vector<Sensor> sensors, int n_sensors, double c_ratio);
 
     public:
-        std::vector<std::vector<Sensor>> HM;
         HarmonySearchConfig config;
+        std::vector<std::vector<Sensor>> HM;
         int max_sensors, min_sensors;
-        int worst_sensor_index;
-        int best_sensor_index;
-        double x_lower, x_upper, y_lower, y_upper;
+        int best_sensors_index, worst_sensors_index;
 
         HarmonySearch(HarmonySearchConfig config);
 
+        void starts();
         void init_harmony_memory();
         void cout_harmony_memory();
+        double calculate_coverage_ratio(std::vector<Sensor> sensors, std::vector<PointOfInterest> pois);
+        void update_best_and_worst_index();
 };
 
 #endif

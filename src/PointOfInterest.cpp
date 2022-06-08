@@ -14,7 +14,7 @@ PointOfInterest::PointOfInterest(std::pair<double, double> point) {
 }
 
 bool PointOfInterest::is_covered(Sensor sensor) {
-    return (sensor.x - x) * (sensor.x - x) + (sensor.y - y) * (sensor.y - y) <= sensor.sensor_radius * sensor.sensor_radius;
+    return (sensor.x - x) * (sensor.x - x) + (sensor.y - y) * (sensor.y - y) <= sensor.radius * sensor.radius;
 }
 
 bool PointOfInterest::is_covered_by_at_least_one(std::vector<Sensor> sensors) {

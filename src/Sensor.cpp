@@ -3,9 +3,10 @@
 #include "Sensor.hpp"
 #include "PointOfInterest.hpp"
 
-
-double Sensor::sensor_radius = 0;
-double Sensor::sensor_uncertainty_radius = 0;
+double Sensor::radius = 0, Sensor::radius_err = 0;
+double Sensor::max_radius = 0, Sensor::min_radius = 0;
+double Sensor::x_lower = 0, Sensor::x_upper = 0;
+double Sensor::y_lower = 0, Sensor::y_upper = 0;
 
 Sensor::Sensor() {
     this->active = false;
@@ -23,7 +24,19 @@ Sensor::Sensor(std::pair<double, double> point) {
 }
 
 bool Sensor::cover(PointOfInterest poi) {
-    return (poi.x - this->x) * (poi.x - this->x) + (poi.y - this->y) * (poi.y - this->y) <= sensor_radius * sensor_radius;
+    return (poi.x - this->x) * (poi.x - this->x) + (poi.y - this->y) * (poi.y - this->y) <= radius * radius;
+}
+
+void Sensor::set_values(int radius, int radius_err, int W, int H) {
+    Sensor::radius = radius;
+    Sensor::radius_err = radius_err;
+
+    Sensor::max_radius = radius + radius_err;
+    Sensor::min_radius = radius - radius_err;
+
+    Sensor::x_lower = Sensor::y_lower = Sensor::min_radius;
+    Sensor::x_upper = W - Sensor::min_radius;
+    Sensor::y_upper = H - Sensor::min_radius;
 }
 
 double Sensor::dist(Sensor s1, Sensor s2) {
@@ -31,8 +44,8 @@ double Sensor::dist(Sensor s1, Sensor s2) {
 }
 
 double Sensor::min_dist(std::vector<Sensor> sensors, int W, int H) {
-    int Wm = W - (Sensor::sensor_radius - Sensor::sensor_uncertainty_radius);
-    int Hm = H - (Sensor::sensor_radius - Sensor::sensor_uncertainty_radius);
+    int Wm = W - (Sensor::radius - Sensor::radius_err);
+    int Hm = H - (Sensor::radius - Sensor::radius_err);
 
     double max_dist_sensors = sqrt(Wm * Wm + Hm * Hm);
     double min_dist_sensors = max_dist_sensors;

@@ -8,8 +8,7 @@
 class HarmonySearchConfig {
     public:
         std::vector<PointOfInterest> pois;
-        int W, H, hm_size;
-        double sensor_radius, sensor_uncertainty_radius;
+        int W, H, hm_size, num_iterations;
 
         HarmonySearchConfig() {}
 };
