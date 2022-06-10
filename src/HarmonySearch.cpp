@@ -81,7 +81,7 @@ double HarmonySearch::calculate_objective(std::vector<Sensor> sensors, int n_sen
     double min_dist_between_sensors = Sensor::min_dist(sensors, config.W, config.H);
     const int k_const = 32;
 
-    return ((double)1/ n_sensors) * c_ratio * min_dist_between_sensors * k_const;
+    return ((double)1 / n_sensors) * c_ratio * min_dist_between_sensors * k_const;
 }
 
 void HarmonySearch::update_best_and_worst_index() {
@@ -173,5 +173,11 @@ void HarmonySearch::cout_harmony_memory(int iteration) {
     std::cout << "sensors: " << num_sensors[best_sensors_index] << " | ";
     std::cout << "objective: " << objectives[best_sensors_index] << " | ";
     std::cout << iteration << "/ "<< config.num_iterations << std::endl;
+    std::cout << std::endl;
+
+    if (iteration == config.num_iterations) {
+        std::cout << "Sensors: " << std::endl;
+        Sensor::cout_sensors(HM[best_sensors_index]);
+    }
     std::cout << std::endl;
 }

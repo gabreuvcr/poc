@@ -9,12 +9,13 @@ class PointOfInterest;
 class Sensor {
     private:
     public:
-        double x, y;
-        bool active;
         static double radius, radius_err;
         static double max_radius, min_radius;
         static double x_lower, x_upper;
         static double y_lower, y_upper;
+
+        double x, y;
+        bool active;
         
         Sensor();
         Sensor(double x, double y);
@@ -23,6 +24,7 @@ class Sensor {
 
         static void set_values(int radius, int radius_err, int W, int H);
         static double min_dist(std::vector<Sensor> sensors, int W, int H);
+        static void cout_sensors(std::vector<Sensor> sensors);
 };
 
 #endif

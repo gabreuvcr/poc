@@ -53,3 +53,13 @@ double Sensor::min_dist(std::vector<Sensor> sensors, int W, int H) {
 
     return min_dist_sensors / max_dist_sensors;
 }
+
+void Sensor::cout_sensors(std::vector<Sensor> sensors) {
+    for (Sensor sensor : sensors) {
+        if (!sensor.active) {
+            std::cout << ". ";
+        } else {
+            std::cout << "(" << sensor.x << ", " << sensor.y << ") ";
+        }
+    }
+}
