@@ -18,13 +18,11 @@ class Sensor {
         
         Sensor();
         Sensor(double x, double y);
-        Sensor(std::pair<double, double> point);
 
-        bool cover(PointOfInterest poi);
+        double distance(Sensor s);
 
         static void set_values(int radius, int radius_err, int W, int H);
         static double min_dist(std::vector<Sensor> sensors, int W, int H);
-        static double dist(Sensor s1, Sensor s2);
 };
 
 #endif

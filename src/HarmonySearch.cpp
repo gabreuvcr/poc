@@ -18,11 +18,10 @@ HarmonySearch::HarmonySearch(HarmonySearchConfig config) {
     this->best_sensors_index = -1;
 }
 
-void HarmonySearch::starts() {
-    this->init_harmony_memory();
+void HarmonySearch::init_harmony_search() {
+    this->init_random_harmony_memory();
     int iteration = 0;
-    std::cout << "Start: " << std::endl;
-    this->cout_harmony_memory();
+    this->cout_harmony_memory(iteration);
     while (iteration < config.num_iterations) {
         std::vector<Sensor> new_vector(max_sensors, Sensor());
         int count_sensors = 0;
@@ -59,10 +58,10 @@ void HarmonySearch::starts() {
             if (new_vector[s].active) count_sensors++;
         }
         if (count_sensors >= min_sensors) {
-            double coverage_ratio = calculate_coverage_ratio(new_vector, config.pois);
+            double coverage_ratio = calculate_coverage_ratio(new_vector);
             double new_objective = calculate_objective(new_vector, count_sensors, coverage_ratio);
             
-            if (new_objective > objectives[worst_sensors_index]) {
+            if (new_objective >= objectives[worst_sensors_index]) {
                 //Update the worst sensor with the new vector
                 HM[worst_sensors_index] = new_vector;
                 objectives[worst_sensors_index] = new_objective;
@@ -71,20 +70,18 @@ void HarmonySearch::starts() {
                 update_best_and_worst_index();
             }
         }
+        if (iteration % 500 == 0) this->cout_harmony_memory(iteration);
 
         iteration++;
     }
-    std::cout << std::endl;
-    this->cout_harmony_memory();
-    std::cout << std::endl;
+    this->cout_harmony_memory(iteration);
 }
 
 double HarmonySearch::calculate_objective(std::vector<Sensor> sensors, int n_sensors, double c_ratio) {
     double min_dist_between_sensors = Sensor::min_dist(sensors, config.W, config.H);
-    const int k_const = 128;
+    const int k_const = 32;
 
-    return ((double)1/n_sensors) + c_ratio * min_dist_between_sensors * k_const;
-    // return ((double)1/n_sensors) * pow(c_ratio, 3) * min_dist_between_sensors * k_const;
+    return ((double)1/ n_sensors) * c_ratio * min_dist_between_sensors * k_const;
 }
 
 void HarmonySearch::update_best_and_worst_index() {
@@ -102,15 +99,15 @@ void HarmonySearch::update_best_and_worst_index() {
     this->worst_sensors_index = worst_index;
 }
 
-double HarmonySearch::calculate_coverage_ratio(std::vector<Sensor> sensors, std::vector<PointOfInterest> pois) {
+double HarmonySearch::calculate_coverage_ratio(std::vector<Sensor> sensors) {
     int num_covered_pois = 0;
-    for (PointOfInterest p : pois) {
+    for (PointOfInterest p : config.pois) {
         if (p.is_covered_by_at_least_one(sensors)) num_covered_pois++;
     }
-    return (double)num_covered_pois / pois.size();
+    return (double)num_covered_pois / config.pois.size();
 }
 
-void HarmonySearch::init_harmony_memory() {
+void HarmonySearch::init_random_harmony_memory() {
     HM.resize(config.hm_size, std::vector<Sensor>(max_sensors, Sensor()));
 
     for (int vec = 0; vec < HM.size(); vec++) {
@@ -124,7 +121,7 @@ void HarmonySearch::init_harmony_memory() {
         std::shuffle(begin(HM[vec]), end(HM[vec]), Random::rng);
 
         num_sensors.push_back(hm_vector_size);
-        coverage_ratios.push_back(calculate_coverage_ratio(HM[vec], config.pois));
+        coverage_ratios.push_back(calculate_coverage_ratio(HM[vec]));
         objectives.push_back(calculate_objective(HM[vec], num_sensors[vec], coverage_ratios[vec]));
 
         if (worst_sensors_index == -1 || objectives[vec] < objectives[worst_sensors_index]) {
@@ -136,15 +133,20 @@ void HarmonySearch::init_harmony_memory() {
     }
 }
 
-void HarmonySearch::cout_harmony_memory() {
+void HarmonySearch::cout_harmony_memory(int iteration) {
     std::cout.precision(4);
     std::cout << std::fixed;
     
-    std::cout << "min_senors: " << min_sensors << std::endl;
-    std::cout << "max_sensors: " << max_sensors << std::endl;
+    // std::cout << "min_senors: " << min_sensors << std::endl;
+    // std::cout << "max_sensors: " << max_sensors << std::endl;
 
     // for (int vec = 0; vec < HM.size(); vec++) {
-    //     std::cout << "> " << num_sensors[vec] << " sensors: " << std::endl;
+    //     // std::cout << "coverage ratios: " << coverage_ratios[vec] << " | ";
+    //     // std::cout << "sensors: " << num_sensors[vec] << " | ";
+    //     // std::cout << "min_dist: " << Sensor::min_dist(HM[vec], config.W, config.H) << " | ";
+    //     // std::cout << "objective: " << objectives[vec] << " | ";
+    //     // std::cout << "> " << num_sensors[vec] << " sensors: " << std::endl;
+    //     std::cout << calculate_objective(HM[vec], num_sensors[vec], coverage_ratios[vec]) << std::endl;
     //     for (int s = 0; s < HM[vec].size(); s++) {
     //         double x = HM[vec][s].x;
     //         double y = HM[vec][s].y;
@@ -153,17 +155,23 @@ void HarmonySearch::cout_harmony_memory() {
     //         } else {
     //             std::cout << "(" << x << ", " << y << ") ";
     //         }
-    //         if (s % 5 == 0) std::cout << std::endl;
+    //         // if (s % 5 == 0) std::cout << std::endl;
     //     }
     //     std::cout << std::endl << std::endl;
     // }
     
-    for (int vec = 0; vec < HM.size(); vec++) {
-        std::cout << "coverage ratios: " << coverage_ratios[vec] << " | ";
-        std::cout << "sensors: " << num_sensors[vec] << " | ";
-        std::cout << "objective: " << objectives[vec] << " | ";
-        if (vec == best_sensors_index) std::cout << "<best>";
-        if (vec == worst_sensors_index) std::cout << "<worst>";
-        std::cout << std::endl;
-    }
+    // for (int vec = 0; vec < HM.size(); vec++) {
+    //     std::cout << "coverage ratios: " << coverage_ratios[vec] << " | ";
+    //     std::cout << "sensors: " << num_sensors[vec] << " | ";
+    //     std::cout << "objective: " << objectives[vec] << " | ";
+    //     if (vec == best_sensors_index) std::cout << "<best>";
+    //     if (vec == worst_sensors_index) std::cout << "<worst>";
+    //     std::cout << std::endl;
+    // }
+
+    std::cout << "coverage ratios: " << coverage_ratios[best_sensors_index] << " | ";
+    std::cout << "sensors: " << num_sensors[best_sensors_index] << " | ";
+    std::cout << "objective: " << objectives[best_sensors_index] << " | ";
+    std::cout << iteration << "/ "<< config.num_iterations << std::endl;
+    std::cout << std::endl;
 }

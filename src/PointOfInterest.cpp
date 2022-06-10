@@ -9,17 +9,14 @@ PointOfInterest::PointOfInterest(double x, double y) {
     this->x = x; this->y = y;
 }
 
-PointOfInterest::PointOfInterest(std::pair<double, double> point) {
-    this->x = point.first; this->y = point.second;
-}
-
+//To-do: change to probability function
 bool PointOfInterest::is_covered(Sensor sensor) {
-    return (sensor.x - x) * (sensor.x - x) + (sensor.y - y) * (sensor.y - y) <= sensor.radius * sensor.radius;
+    return (sensor.x - this->x) * (sensor.x - this->x) + (sensor.y - this->y) * (sensor.y - this->y) <= sensor.radius * sensor.radius;
 }
 
 bool PointOfInterest::is_covered_by_at_least_one(std::vector<Sensor> sensors) {
     for (Sensor sensor : sensors) {
-        if (is_covered(sensor)) return true;
+        if (this->is_covered(sensor)) return true;
     }
     return false;
 }
@@ -38,18 +35,13 @@ std::vector<PointOfInterest> PointOfInterest::_generate_pois_from_grid(int W, in
 
 int PointOfInterest::_read_type_grid(std::vector<PointOfInterest> &pois, int W, int H) {
     int cel_size; std::cin >> cel_size;
-    // std::cout << W << " width" << std::endl;
-    // std::cout << H << " height" << std::endl;
-    // std::cout << "cel_size: " << cel_size << std::endl;
 
     if (W % cel_size != 0 || H % cel_size != 0 || cel_size < 1 || cel_size > W || cel_size > H) {
-        std::cout << "Invalid cel_size value" << std::endl;
-        return -1;
+        throw std::runtime_error("Invalid cel_size value");
     }
 
     pois = PointOfInterest::_generate_pois_from_grid(W, H, cel_size);
 
-    // std::cout << "Generated " << pois.size() << " pois" << std::endl;
     return 1;
 }
 
@@ -58,20 +50,21 @@ int PointOfInterest::_read_type_points(std::vector<PointOfInterest> &pois, int W
 
     for (int p = 0; p < num_pois; p++) {
         double x, y; std::cin >> x >> y;
+
         if (x < 0 || x > W || y < 0 || y > H) {
-            std::cout << "Invalid coordinate value" << std::endl;
-            return -1;
+            throw std::runtime_error("Invalid coordinate value");
         }
+
         pois.push_back(PointOfInterest(x, y));
     }
-    // std::cout << "Read " << pois.size() << " pois" << std::endl;
+
     return 1;
 }
 
 int PointOfInterest::read_pois(std::vector<PointOfInterest> &pois, int W, int H) {
     std::string type; std::cin >> type;
 
-    if (type != "G" && type != "P") return -1;
+    if (type != "G" && type != "P") throw std::runtime_error("Must be type G or P");
 
     if (type == "G") {
         return PointOfInterest::_read_type_grid(pois, W, H);
@@ -80,4 +73,12 @@ int PointOfInterest::read_pois(std::vector<PointOfInterest> &pois, int W, int H)
     }
 
     return -1;
+}
+
+void PointOfInterest::cout_pois(std::vector<PointOfInterest> pois) {
+    std::cout << pois.size() << std::endl;
+    for (PointOfInterest poi : pois) {
+        std::cout << "(" << poi.x << ", " << poi.y << ") ";
+    }
+    std::cout << std::endl;
 }

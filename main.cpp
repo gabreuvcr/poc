@@ -19,20 +19,11 @@ int main(int argc, char* argv[]) {
 
     Sensor::set_values(radius, radius_err, config.W, config.H);
 
-    if (PointOfInterest::read_pois(config.pois, config.W, config.H) == -1) {
-        throw std::runtime_error("Invalid input");
-    }
-
-    // for (PointOfInterest poi : config.pois) {
-    //     std::cout << "(" << poi.x << ", " << poi.y << ") ";
-    // }
-    // std::cout << std::endl;
+    PointOfInterest::read_pois(config.pois, config.W, config.H);
 
     HarmonySearch hs = HarmonySearch(config);
     
-    hs.starts();
-    // hs.cout_harmony_memory();
-
+    hs.init_harmony_search();
+    
     return 0;
 }
-

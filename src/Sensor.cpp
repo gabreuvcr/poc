@@ -18,15 +18,6 @@ Sensor::Sensor(double x, double y) {
     this->x = x; this->y = y;
 }
 
-Sensor::Sensor(std::pair<double, double> point) {
-    this->active = true;
-    this->x = point.first; this->y = point.second;
-}
-
-bool Sensor::cover(PointOfInterest poi) {
-    return (poi.x - this->x) * (poi.x - this->x) + (poi.y - this->y) * (poi.y - this->y) <= radius * radius;
-}
-
 void Sensor::set_values(int radius, int radius_err, int W, int H) {
     Sensor::radius = radius;
     Sensor::radius_err = radius_err;
@@ -39,8 +30,8 @@ void Sensor::set_values(int radius, int radius_err, int W, int H) {
     Sensor::y_upper = H - Sensor::min_radius;
 }
 
-double Sensor::dist(Sensor s1, Sensor s2) {
-    return sqrt((s1.x - s2.x) * (s1.x - s2.x) + (s1.y - s2.y) * (s1.y - s2.y));
+double Sensor::distance(Sensor s) {
+    return sqrt((this->x - s.x) * (this->x - s.x) + (this->y - s.y) * (this->y - s.y));
 }
 
 double Sensor::min_dist(std::vector<Sensor> sensors, int W, int H) {
@@ -54,7 +45,7 @@ double Sensor::min_dist(std::vector<Sensor> sensors, int W, int H) {
         for (int sj = 0; sj < sensors.size(); sj++) {
             if (si == sj || !sensors[si].active || !sensors[sj].active) continue;
 
-            double dist = Sensor::dist(sensors[si], sensors[sj]);
+            double dist = sensors[si].distance(sensors[sj]);
 
             min_dist_sensors = std::min(min_dist_sensors, dist);
         }

@@ -16,12 +16,12 @@ class PointOfInterest {
         double x, y;
         PointOfInterest();
         PointOfInterest(double x, double y);
-        PointOfInterest(std::pair<double, double> point);
 
         bool is_covered(Sensor sensor);
         bool is_covered_by_at_least_one(std::vector<Sensor> sensors);
 
         static int read_pois(std::vector<PointOfInterest> &pois, int w, int h);
+        static void cout_pois(std::vector<PointOfInterest> pois);
 };
 
 #endif

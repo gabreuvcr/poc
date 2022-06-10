@@ -16,6 +16,8 @@ class HarmonySearch {
         std::vector<double> objectives;
 
         double calculate_objective(std::vector<Sensor> sensors, int n_sensors, double c_ratio);
+        double calculate_coverage_ratio(std::vector<Sensor> sensors);
+        void update_best_and_worst_index();
 
     public:
         HarmonySearchConfig config;
@@ -25,11 +27,9 @@ class HarmonySearch {
 
         HarmonySearch(HarmonySearchConfig config);
 
-        void starts();
-        void init_harmony_memory();
-        void cout_harmony_memory();
-        double calculate_coverage_ratio(std::vector<Sensor> sensors, std::vector<PointOfInterest> pois);
-        void update_best_and_worst_index();
+        void init_harmony_search();
+        void init_random_harmony_memory();
+        void cout_harmony_memory(int interation);
 };
 
 #endif
