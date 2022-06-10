@@ -9,8 +9,8 @@ class Sensor;
 class PointOfInterest {
     private:
         static std::vector<PointOfInterest> _generate_pois_from_grid(int w, int h, int cel_size);
-        static int _read_type_grid(std::vector<PointOfInterest> &pois, int w, int h);
-        static int _read_type_points(std::vector<PointOfInterest> &pois, int w, int h);
+        static int _read_grid_type(std::vector<PointOfInterest> &pois, int w, int h);
+        static int _read_points_type(std::vector<PointOfInterest> &pois, int w, int h);
 
     public:
         double x, y;

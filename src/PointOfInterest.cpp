@@ -33,7 +33,7 @@ std::vector<PointOfInterest> PointOfInterest::_generate_pois_from_grid(int W, in
     return pois;
 }
 
-int PointOfInterest::_read_type_grid(std::vector<PointOfInterest> &pois, int W, int H) {
+int PointOfInterest::_read_grid_type(std::vector<PointOfInterest> &pois, int W, int H) {
     int cel_size; std::cin >> cel_size;
 
     if (W % cel_size != 0 || H % cel_size != 0 || cel_size < 1 || cel_size > W || cel_size > H) {
@@ -45,7 +45,7 @@ int PointOfInterest::_read_type_grid(std::vector<PointOfInterest> &pois, int W, 
     return 1;
 }
 
-int PointOfInterest::_read_type_points(std::vector<PointOfInterest> &pois, int W, int H) {
+int PointOfInterest::_read_points_type(std::vector<PointOfInterest> &pois, int W, int H) {
     int num_pois; std::cin >> num_pois;
 
     for (int p = 0; p < num_pois; p++) {
@@ -67,9 +67,9 @@ int PointOfInterest::read_pois(std::vector<PointOfInterest> &pois, int W, int H)
     if (type != "G" && type != "P") throw std::runtime_error("Must be type G or P");
 
     if (type == "G") {
-        return PointOfInterest::_read_type_grid(pois, W, H);
+        return PointOfInterest::_read_grid_type(pois, W, H);
     } else if (type == "P") {
-        return PointOfInterest::_read_type_points(pois, W, H);
+        return PointOfInterest::_read_points_type(pois, W, H);
     }
 
     return -1;
