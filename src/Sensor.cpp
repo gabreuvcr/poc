@@ -2,6 +2,7 @@
 
 #include "Sensor.hpp"
 #include "PointOfInterest.hpp"
+#include "Random.hpp"
 
 double Sensor::radius = 0, Sensor::radius_err = 0;
 double Sensor::max_radius = 0, Sensor::min_radius = 0;
@@ -41,6 +42,8 @@ double Sensor::min_dist(std::vector<Sensor> sensors, int W, int H) {
     double max_dist_sensors = sqrt(Wm * Wm + Hm * Hm);
     double min_dist_sensors = max_dist_sensors;
 
+    if (max_dist_sensors == 0) return 1;
+
     for (int si = 0; si < sensors.size(); si++) {
         for (int sj = 0; sj < sensors.size(); sj++) {
             if (si == sj || !sensors[si].active || !sensors[sj].active) continue;
@@ -52,6 +55,13 @@ double Sensor::min_dist(std::vector<Sensor> sensors, int W, int H) {
     }
 
     return min_dist_sensors / max_dist_sensors;
+}
+
+Sensor Sensor::random_sensor() {
+    double x = Random::random_value(x_lower, x_upper);
+    double y = Random::random_value(y_lower, y_upper);
+
+    return Sensor(x, y);
 }
 
 void Sensor::cout_sensors(std::vector<Sensor> sensors) {

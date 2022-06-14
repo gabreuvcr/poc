@@ -17,13 +17,18 @@ class HarmonySearch {
 
         double calculate_objective(std::vector<Sensor> sensors, int n_sensors, double c_ratio);
         double calculate_coverage_ratio(std::vector<Sensor> sensors);
+        Sensor memory_consideration(int s);
+        Sensor pitch_adjustment(Sensor new_sensor);
+        Sensor random_consideration();
+
         void update_best_and_worst_index();
+        void update_best_and_worst_index(int i);
 
     public:
         HarmonySearchConfig config;
         std::vector<std::vector<Sensor>> HM;
         int max_sensors, min_sensors;
-        int best_sensors_index, worst_sensors_index;
+        int i_best, i_worst;
 
         HarmonySearch(HarmonySearchConfig config);
 
