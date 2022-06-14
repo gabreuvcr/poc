@@ -93,7 +93,7 @@ double HarmonySearch::calculate_objective(std::vector<Sensor> sensors, int n_sen
     double min_dist_between_sensors = Sensor::min_dist(sensors, config.W, config.H);
     const int k_const = 32;
 
-    return ((double)1 / sqrt(n_sensors)) * pow(c_ratio, 3) * min_dist_between_sensors * k_const;
+    return ((double)1 / n_sensors) * c_ratio * min_dist_between_sensors * k_const;
 }
 
 Sensor HarmonySearch::memory_consideration(int s) {
