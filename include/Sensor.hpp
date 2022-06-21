@@ -18,7 +18,7 @@ class Sensor {
         Sensor();
         Sensor(double x, double y);
 
-        double distance(Sensor s);
+        double distance_to(Sensor s);
 
         static void set_values(double radius, double radius_err, int W, int H);
         static double min_dist(std::vector<Sensor> sensors, int W, int H);

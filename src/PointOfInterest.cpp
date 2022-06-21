@@ -8,21 +8,11 @@ PointOfInterest::PointOfInterest(double x, double y) {
     this->x = x; this->y = y;
 }
 
-bool PointOfInterest::is_covered(Sensor sensor) {
-    if (!sensor.active) return false;
-
-    return (sensor.x - this->x) * (sensor.x - this->x) + (sensor.y - this->y) * (sensor.y - this->y) <= sensor.radius * sensor.radius;;
-}
-
-bool PointOfInterest::is_covered_by_at_least_one(std::vector<Sensor> sensors) {
-    for (Sensor sensor : sensors) {
-        if (sensor.active && this->is_covered(sensor)) return true;
-    }
-    return false;
-}
-
-double PointOfInterest::distance_to_sensor(Sensor sensor) {
-    return sqrt((sensor.x - this->x) * (sensor.x - this->x) + (sensor.y - this->y) * (sensor.y - this->y));
+double PointOfInterest::distance_to(Sensor sensor) {
+    return sqrt(
+        (sensor.x - this->x) * (sensor.x - this->x) + 
+        (sensor.y - this->y) * (sensor.y - this->y)
+    );
 }
 
 double probability_function(double dist_to_sensor) {
@@ -35,7 +25,7 @@ double probability_function(double dist_to_sensor) {
 double PointOfInterest::probability_coverage(Sensor sensor) {
     if (!sensor.active) return 0;
 
-    double dist_to_sensor = this->distance_to_sensor(sensor);
+    double dist_to_sensor = this->distance_to(sensor);
 
     if (dist_to_sensor <= Sensor::min_radius) {
         return 1;

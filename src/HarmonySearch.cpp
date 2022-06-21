@@ -14,8 +14,7 @@ HarmonySearch::HarmonySearch(HarmonySearchConfig config) {
         (config.W / (2 * Sensor::min_radius)) * (config.H / (2 * Sensor::min_radius))
     );
 
-    // this->max_sensors = 21;
-    // this->min_sensors = max_sensors;
+    // this->max_sensors = this->min_sensors =  21;
 
     HM.resize(config.hm_size, std::vector<Sensor>(max_sensors, Sensor()));
     num_sensors.resize(config.hm_size);
@@ -146,16 +145,10 @@ void HarmonySearch::update_best_and_worst_index(int i) {
 double HarmonySearch::calculate_coverage_ratio(std::vector<Sensor> sensors) {
     int num_covered_pois = 0;
     for (PointOfInterest poi : config.pois) {
-        double jointcov = poi.joint_coverage(sensors);
-        if (jointcov > Constants::COVERAGE_THRESHOLD) {
+        if (poi.joint_coverage(sensors) > Constants::COVERAGE_THRESHOLD) {
             num_covered_pois++;
         }
-        // std::cout << jointcov << " ";
-        // if (poi.is_covered_by_at_least_one(sensors)) {
-        //     num_covered_pois++;
-        // }
     }
-    // std::cout << std::endl;
     return (double)num_covered_pois / config.pois.size();
 }
 
