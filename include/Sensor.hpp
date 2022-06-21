@@ -20,7 +20,7 @@ class Sensor {
 
         double distance(Sensor s);
 
-        static void set_values(int radius, int radius_err, int W, int H);
+        static void set_values(double radius, double radius_err, int W, int H);
         static double min_dist(std::vector<Sensor> sensors, int W, int H);
         static Sensor random_sensor();
         static void cout_sensors(std::vector<Sensor> sensors);

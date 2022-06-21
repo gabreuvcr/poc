@@ -19,7 +19,7 @@ Sensor::Sensor(double x, double y) {
     this->x = x; this->y = y;
 }
 
-void Sensor::set_values(int radius, int radius_err, int W, int H) {
+void Sensor::set_values(double radius, double radius_err, int W, int H) {
     Sensor::radius = radius;
     Sensor::radius_err = radius_err;
 
@@ -32,7 +32,9 @@ void Sensor::set_values(int radius, int radius_err, int W, int H) {
 }
 
 double Sensor::distance(Sensor s) {
-    return sqrt((this->x - s.x) * (this->x - s.x) + (this->y - s.y) * (this->y - s.y));
+    return sqrt( (this->x - s.x) * (this->x - s.x) + 
+                 (this->y - s.y) * (this->y - s.y)
+    );
 }
 
 double Sensor::min_dist(std::vector<Sensor> sensors, int W, int H) {
@@ -53,7 +55,7 @@ double Sensor::min_dist(std::vector<Sensor> sensors, int W, int H) {
             min_dist_sensors = std::min(min_dist_sensors, dist);
         }
     }
-
+    
     return min_dist_sensors / max_dist_sensors;
 }
 

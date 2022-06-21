@@ -1,19 +1,17 @@
+#include <cmath>
+
 #include "PointOfInterest.hpp"
 #include "Sensor.hpp"
-
-PointOfInterest::PointOfInterest() {
-    this->x = -1; this->y = -1;
-}
+#include "Constants.hpp"
 
 PointOfInterest::PointOfInterest(double x, double y) {
     this->x = x; this->y = y;
 }
 
-//To-do: change to probability function
 bool PointOfInterest::is_covered(Sensor sensor) {
     if (!sensor.active) return false;
 
-    return (sensor.x - this->x) * (sensor.x - this->x) + (sensor.y - this->y) * (sensor.y - this->y) <= sensor.radius * sensor.radius;
+    return (sensor.x - this->x) * (sensor.x - this->x) + (sensor.y - this->y) * (sensor.y - this->y) <= sensor.radius * sensor.radius;;
 }
 
 bool PointOfInterest::is_covered_by_at_least_one(std::vector<Sensor> sensors) {
@@ -21,6 +19,42 @@ bool PointOfInterest::is_covered_by_at_least_one(std::vector<Sensor> sensors) {
         if (sensor.active && this->is_covered(sensor)) return true;
     }
     return false;
+}
+
+double PointOfInterest::distance_to_sensor(Sensor sensor) {
+    return sqrt((sensor.x - this->x) * (sensor.x - this->x) + (sensor.y - this->y) * (sensor.y - this->y));
+}
+
+double probability_function(double dist_to_sensor) {
+    double L1 = Sensor::radius_err - Sensor::radius + dist_to_sensor;
+    double L2 = Sensor::radius_err + Sensor::radius - dist_to_sensor;
+
+    return exp(-Constants::A1 * pow(L1, Constants::B1) / pow(L2, Constants::B2) + Constants::A2);
+}
+
+double PointOfInterest::probability_coverage(Sensor sensor) {
+    if (!sensor.active) return 0;
+
+    double dist_to_sensor = this->distance_to_sensor(sensor);
+
+    if (dist_to_sensor <= Sensor::min_radius) {
+        return 1;
+    } else if (dist_to_sensor < Sensor::max_radius) {
+        return probability_function(dist_to_sensor);
+    } else {
+        return 0;
+    }
+}
+
+double PointOfInterest::joint_coverage(std::vector<Sensor> sensors) {
+    double mult = 1;
+
+    for (Sensor sensor : sensors) {
+        
+        mult *= 1 - this->probability_coverage(sensor);
+    }
+
+    return 1 - mult;
 }
 
 int PointOfInterest::read_grid_type(std::vector<PointOfInterest> &pois, int W, int H) {
