@@ -1,8 +1,14 @@
-W H HM_size sensor_radius num_iterations
+W H HM_size num_iterations
+sensor_radius
 G cel_size
 
-W H HM_size sensor_radius num_iterations
+W H HM_size num_iterations
+sensor_radius
 P num_points
 x1 y1
-x2 y2
-x3 y3
+...
+
+run:
+./main <input_file> [-f <value>] [-t]
+-f = fixed number of sensors
+-t = run tests

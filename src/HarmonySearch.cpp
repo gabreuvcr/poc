@@ -1,11 +1,10 @@
-#include <cmath>
-
 #include "HarmonySearch.hpp"
 #include "Constants.hpp"
 #include "Random.hpp"
 
-HarmonySearch::HarmonySearch(HarmonySearchConfig config) {
+HarmonySearch::HarmonySearch(HarmonySearchConfig config, std::vector<PointOfInterest> pois) {
     this->config = config;
+    this->pois = pois;
 
     this->min_sensors = ceil(
         (config.W / (2 * Sensor::max_radius)) * (config.H / (2 * Sensor::max_radius))
@@ -14,41 +13,39 @@ HarmonySearch::HarmonySearch(HarmonySearchConfig config) {
         (config.W / (2 * Sensor::min_radius)) * (config.H / (2 * Sensor::min_radius))
     );
 
-    // this->max_sensors = this->min_sensors =  21;
-
-    HM.resize(config.hm_size, std::vector<Sensor>(max_sensors, Sensor()));
-    num_sensors.resize(config.hm_size);
-    coverage_ratios.resize(config.hm_size);
-    objectives.resize(config.hm_size);
+    HM.resize(config.mem_size, std::vector<Sensor>(max_sensors, Sensor()));
+    num_sensors.resize(config.mem_size);
+    coverage_ratios.resize(config.mem_size);
+    objectives.resize(config.mem_size);
 
     this->i_worst = -1;
     this->i_best = -1;
 }
 
-void HarmonySearch::init_harmony_search() {
+HarmonySearch::HarmonySearch(HarmonySearchConfig config, std::vector<PointOfInterest> pois, int num_fixed_sensors)
+ : HarmonySearch(config, pois) {
+    this->min_sensors = num_fixed_sensors;
+    this->max_sensors = num_fixed_sensors;
+}
+
+double HarmonySearch::run() {
     this->init_random_harmony_memory();
     int iteration = 0;
 
     while (iteration < config.num_iterations) {
         std::vector<Sensor> new_sensors(max_sensors, Sensor());
         int n_sensors = 0;
-
         for (int s = 0; s < max_sensors; s++) {
-
             if (Random::random() <= Constants::HMCR) {
                 new_sensors[s] = memory_consideration(s);
-
                 if (new_sensors[s].active && Random::random() <= Constants::PAR) {
                     new_sensors[s] = pitch_adjustment(new_sensors[s]);
                 }
-                
             } else { 
                 new_sensors[s] = random_consideration();
             }
-
             if (new_sensors[s].active) n_sensors++;
         }
-
         if (n_sensors >= min_sensors) {
             double coverage_ratio = calculate_coverage_ratio(new_sensors);
             double new_objective = calculate_objective(new_sensors, n_sensors, coverage_ratio);
@@ -57,16 +54,16 @@ void HarmonySearch::init_harmony_search() {
                 objectives[i_worst] = new_objective;
                 num_sensors[i_worst] = n_sensors;
                 coverage_ratios[i_worst] = coverage_ratio;
-
                 update_best_and_worst_index();
             }
         }
 
-        if (iteration % 500 == 0) this->cout_harmony_memory(iteration);
+        if (!test && iteration % 500 == 0) this->cout_harmony_memory(iteration);
 
         iteration++;
     }
-    this->cout_harmony_memory(iteration);
+    if (!test) this->cout_harmony_memory(iteration);
+    return coverage_ratios[i_best];
 }
 
 void HarmonySearch::init_random_harmony_memory() {
@@ -144,12 +141,12 @@ void HarmonySearch::update_best_and_worst_index(int i) {
 
 double HarmonySearch::calculate_coverage_ratio(std::vector<Sensor> sensors) {
     int num_covered_pois = 0;
-    for (PointOfInterest poi : config.pois) {
+    for (PointOfInterest poi : pois) {
         if (poi.joint_coverage(sensors) > Constants::COVERAGE_THRESHOLD) {
             num_covered_pois++;
         }
     }
-    return (double)num_covered_pois / config.pois.size();
+    return (double)num_covered_pois / pois.size();
 }
 
 void HarmonySearch::cout_harmony_memory(int iteration) {
@@ -169,3 +166,5 @@ void HarmonySearch::cout_harmony_memory(int iteration) {
     }
     std::cout << std::endl;
 }
+
+void HarmonySearch::set_test(bool test) { this->test = test; };

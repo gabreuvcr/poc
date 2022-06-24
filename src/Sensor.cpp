@@ -1,5 +1,4 @@
 #include <cmath>
-
 #include "Sensor.hpp"
 #include "PointOfInterest.hpp"
 #include "Random.hpp"
@@ -39,17 +38,17 @@ double Sensor::distance_to(Sensor s) {
 }
 
 double Sensor::min_dist(std::vector<Sensor> sensors, int W, int H) {
-    int Wm = W - (Sensor::radius - Sensor::radius_err);
-    int Hm = H - (Sensor::radius - Sensor::radius_err);
+    double Wm = W - (Sensor::radius - Sensor::radius_err);
+    double Hm = H - (Sensor::radius - Sensor::radius_err);
 
     double max_dist_sensors = sqrt(Wm * Wm + Hm * Hm);
     double min_dist_sensors = max_dist_sensors;
 
     if (max_dist_sensors == 0) return 1;
 
-    for (int si = 0; si < sensors.size(); si++) {
-        for (int sj = 0; sj < sensors.size(); sj++) {
-            if (si == sj || !sensors[si].active || !sensors[sj].active) continue;
+    for (int si = 0; si < sensors.size() - 1; si++) {
+        for (int sj = si + 1; sj < sensors.size(); sj++) {
+            if (!sensors[si].active || !sensors[sj].active) continue;
 
             double dist = sensors[si].distance_to(sensors[sj]);
 
