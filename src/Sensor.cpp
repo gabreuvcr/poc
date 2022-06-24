@@ -1,6 +1,5 @@
 #include <cmath>
 #include "Sensor.hpp"
-#include "PointOfInterest.hpp"
 #include "Random.hpp"
 
 double Sensor::radius = 0, Sensor::radius_err = 0;

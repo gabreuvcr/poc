@@ -2,7 +2,6 @@
 #define HARMONY_SEARCH_CONFIG_H
 
 #include <vector>
-#include "PointOfInterest.hpp"
 
 class HarmonySearchConfig {
     public:

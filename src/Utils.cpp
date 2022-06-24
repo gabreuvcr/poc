@@ -35,10 +35,9 @@ namespace Utils {
         std::ifstream file(filename);
 
         if (!file.is_open()) {
-            std::cout << "Error: could not open file " << filename << std::endl;
-            exit(1);
+            throw std::runtime_error("Error: could not open file " + filename);
         }
-
+        
         return file;
     }
 
@@ -46,7 +45,6 @@ namespace Utils {
         HarmonySearchConfig config = HarmonySearchConfig();
 
         file >> config.W >> config.H;
-        
         file >> config.mem_size >> config.num_iterations;
 
         return config;

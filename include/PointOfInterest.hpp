@@ -3,8 +3,7 @@
 
 #include <iostream>
 #include <vector>
-
-class Sensor;
+#include "Sensor.hpp"
 
 class PointOfInterest {
     private:

@@ -13,13 +13,10 @@ HarmonySearch::HarmonySearch(HarmonySearchConfig config, std::vector<PointOfInte
         (config.W / (2 * Sensor::min_radius)) * (config.H / (2 * Sensor::min_radius))
     );
 
-    HM.resize(config.mem_size, std::vector<Sensor>(max_sensors, Sensor()));
+    HM.resize(config.mem_size);
     num_sensors.resize(config.mem_size);
     coverage_ratios.resize(config.mem_size);
     objectives.resize(config.mem_size);
-
-    this->i_worst = -1;
-    this->i_best = -1;
 }
 
 HarmonySearch::HarmonySearch(HarmonySearchConfig config, std::vector<PointOfInterest> pois, int num_fixed_sensors)
@@ -46,6 +43,7 @@ double HarmonySearch::run() {
             }
             if (new_sensors[s].active) n_sensors++;
         }
+        
         if (n_sensors >= min_sensors) {
             double coverage_ratio = calculate_coverage_ratio(new_sensors);
             double new_objective = calculate_objective(new_sensors, n_sensors, coverage_ratio);
@@ -81,9 +79,8 @@ void HarmonySearch::init_random_harmony_memory() {
         num_sensors[i] = n_sensors;
         coverage_ratios[i] = calculate_coverage_ratio(new_sensors);
         objectives[i] = calculate_objective(new_sensors, num_sensors[i], coverage_ratios[i]);
-
-        update_best_and_worst_index(i);
     }
+    update_best_and_worst_index();
 }
 
 double HarmonySearch::calculate_objective(std::vector<Sensor> sensors, int n_sensors, double c_ratio) {
@@ -100,17 +97,8 @@ Sensor HarmonySearch::memory_consideration(int s) {
 }
 
 Sensor HarmonySearch::pitch_adjustment(Sensor new_sensor) {
-    if (Random::random() <= 0.5) {
-        new_sensor.x += (Random::random() * Constants::BW);
-    } else {
-        new_sensor.x -= (Random::random() * Constants::BW);
-    } 
-
-    if (Random::random() <= 0.5) {
-        new_sensor.y += (Random::random() * Constants::BW);
-    } else {
-        new_sensor.y -= (Random::random() * Constants::BW);
-    }
+    new_sensor.x += (Random::random() <= 0.5 ? -1 : 1) * (Random::random() * Constants::BW);
+    new_sensor.y += (Random::random() <= 0.5 ? -1 : 1) * (Random::random() * Constants::BW);
 
     return new_sensor;
 }
@@ -120,22 +108,10 @@ Sensor HarmonySearch::random_consideration() {
 }
 
 void HarmonySearch::update_best_and_worst_index() {
+    i_best = i_worst = 0;
     for (int i = 0; i < HM.size(); i++) {
-        if (objectives[i] > objectives[i_best]) {
-            i_best = i;
-        }
-        if (objectives[i] < objectives[i_worst]) {
-            i_worst = i;
-        }
-    }
-}
-
-void HarmonySearch::update_best_and_worst_index(int i) {
-    if (i_worst == -1 || objectives[i] < objectives[i_worst]) {
-        i_worst = i;
-    }
-    if (i_best == -1 || objectives[i] > objectives[i_best]) {
-        i_best = i;
+        if (objectives[i] > objectives[i_best])  i_best  = i;
+        if (objectives[i] < objectives[i_worst]) i_worst = i;
     }
 }
 
@@ -167,4 +143,6 @@ void HarmonySearch::cout_harmony_memory(int iteration) {
     std::cout << std::endl;
 }
 
-void HarmonySearch::set_test(bool test) { this->test = test; };
+void HarmonySearch::set_test(bool test) { 
+    this->test = test; 
+};

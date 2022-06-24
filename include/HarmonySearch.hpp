@@ -6,6 +6,7 @@
 #include <random>
 #include <algorithm>
 #include "HarmonySearchConfig.hpp"
+#include "PointOfInterest.hpp"
 #include "Sensor.hpp"
 
 class HarmonySearch {
@@ -15,14 +16,13 @@ class HarmonySearch {
         std::vector<double> objectives;
         bool test = false;
 
-        double calculate_objective(std::vector<Sensor> sensors, int n_sensors, double c_ratio);
-        double calculate_coverage_ratio(std::vector<Sensor> sensors);
+        void init_random_harmony_memory();
         Sensor memory_consideration(int s);
         Sensor pitch_adjustment(Sensor new_sensor);
         Sensor random_consideration();
-
+        double calculate_objective(std::vector<Sensor> sensors, int n_sensors, double c_ratio);
+        double calculate_coverage_ratio(std::vector<Sensor> sensors);
         void update_best_and_worst_index();
-        void update_best_and_worst_index(int i);
 
     public:
         HarmonySearchConfig config;
@@ -36,7 +36,6 @@ class HarmonySearch {
         HarmonySearch(HarmonySearchConfig config, std::vector<PointOfInterest> pois, int num_fixed_sensors);
 
         double run();
-        void init_random_harmony_memory();
         void cout_harmony_memory(int interation);
         void set_test(bool test);
 };
