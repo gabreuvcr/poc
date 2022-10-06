@@ -22,8 +22,6 @@ double probability_function(double dist_to_sensor) {
 }
 
 double PointOfInterest::probability_coverage(Sensor sensor) {
-    if (!sensor.active) return 0;
-
     double dist_to_sensor = this->distance_to(sensor);
 
     if (dist_to_sensor <= Sensor::min_radius) {
@@ -35,11 +33,13 @@ double PointOfInterest::probability_coverage(Sensor sensor) {
     }
 }
 
-double PointOfInterest::joint_coverage(std::vector<Sensor> sensors) {
+double PointOfInterest::joint_coverage(std::vector<Sensor> sensors, std::vector<bool> active_sensors) {
     double mult = 1;
 
-    for (Sensor sensor : sensors) {
-        mult *= 1 - this->probability_coverage(sensor);
+    for (int s = 0; s < sensors.size(); s++) {
+        if (active_sensors[s]) {
+            mult *= 1 - this->probability_coverage(sensors[s]);
+        }
     }
 
     return 1 - mult;

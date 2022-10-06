@@ -3,24 +3,29 @@
 
 #include <iostream>
 #include <vector>
-
+#include "DifferentialEvolutionConfig.hpp"
 #include "Sensor.hpp"
 #include "PointOfInterest.hpp"
+#include "Agent.hpp"
 
 class DifferentialEvolution {
     private:
-        std::vector<std::vector<Sensor>> population;
         void init_first_population();
-        std::vector<Sensor> mutation(std::vector<Sensor> indivi);
-        std::vector<Sensor> crossover(std::vector<Sensor> agent_a, std::vector<Sensor> agent_b);
-        void selection();
+        // std::vector<Sensor> mutation();
+        // std::vector<Sensor> crossover();
+        // void selection();
+
+        void update_dominat_sensors();
 
     public:
+        DifferentialEvolutionConfig config;
         std::vector<PointOfInterest> pois;
+        std::vector<Agent> population;
+        int max_sensores, min_sensores;
         
-        DifferentialEvolution();
+        DifferentialEvolution(DifferentialEvolutionConfig config, std::vector<PointOfInterest> pois);
         
-        double run();
+        void run();
 };
 
 #endif

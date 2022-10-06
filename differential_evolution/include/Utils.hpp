@@ -3,13 +3,13 @@
 
 #include <iostream>
 #include <fstream>
-// #include "HarmonySearchConfig.hpp"
+#include "DifferentialEvolutionConfig.hpp"
 #include "PointOfInterest.hpp"
 
 namespace Utils {
-    void check_arguments(char *argv[], int argc, std::string &filename, bool &fixed_sensors, int &fixed_sensors_num, bool &run_tests);
+    void check_arguments(char *argv[], int argc, std::string &filename);
     std::ifstream open_file(std::string filename);
-    // HarmonySearchConfig read_harmony_config(std::ifstream &file);
+    DifferentialEvolutionConfig read_differential_evolution_config(std::ifstream &file);
     double read_sensor_radius(std::ifstream &file);
     std::vector<PointOfInterest> read_pois(std::ifstream &file, int W, int H);
 };

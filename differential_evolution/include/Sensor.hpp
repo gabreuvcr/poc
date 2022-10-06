@@ -13,17 +13,17 @@ class Sensor {
         static double y_lower, y_upper;
 
         double x, y;
-        bool active;
+        // bool active;
         
         Sensor();
         Sensor(double x, double y);
 
         double distance_to(Sensor s);
 
-        static void set_values(double radius, double radius_err, int W, int H);
-        static double min_dist(std::vector<Sensor> sensors, int W, int H);
+        static void set_values(double radius, int W, int H);
+        // static double min_dist(std::vector<Sensor> sensors, int W, int H);
         static Sensor random_sensor();
-        static void cout_sensors(std::vector<Sensor> sensors);
+        static void cout_sensors(std::vector<Sensor> sensors, std::vector<bool> active_sensors);
 };
 
 #endif

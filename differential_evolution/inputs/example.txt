@@ -1,8 +1,8 @@
-W H HM_size num_iterations
+W H POP_size num_gerations
 sensor_radius
 G cel_size
 
-W H HM_size num_iterations
+W H POP_size num_gerations
 sensor_radius
 P num_points
 x1 y1

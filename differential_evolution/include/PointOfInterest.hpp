@@ -14,7 +14,7 @@ class PointOfInterest {
         double x, y;
 
         PointOfInterest(double x, double y);
-        double joint_coverage(std::vector<Sensor> sensors);
+        double joint_coverage(std::vector<Sensor> sensors, std::vector<bool> active_sensors);
 
         static void cout_pois(std::vector<PointOfInterest> pois);
 };

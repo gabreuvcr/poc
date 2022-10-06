@@ -5,29 +5,13 @@
 #include "PointOfInterest.hpp"
 
 namespace Utils {
-    void check_arguments(char *argv[], int argc, std::string &filename, bool &fixed_sensors, int &num_fixed_sensors, bool &run_tests) {
+    void check_arguments(char *argv[], int argc, std::string &filename) {
         if (argc == 1) {
             throw std::runtime_error("Usage: " + std::string(argv[0]) + " <input_file> [-f <value>] [-t]");
             exit(1);
         }
         if (argc >= 2) {
             filename = argv[1];
-        }
-        if (argc >= 3) {
-            for (int i = 2; i < argc; i++) {
-                if (strcmp(argv[i], "-f") == 0) {
-                    if (i + 1 >= argc || strcmp(argv[i + 1], "-t") == 0) {
-                        throw std::runtime_error("Fixed sensors numbers is required after -f");
-                    }
-                    fixed_sensors = true;
-                    num_fixed_sensors = atoi(argv[++i]);
-                    if (num_fixed_sensors <= 0) {
-                        throw std::runtime_error("Fixed sensors number must be a valid value");
-                    }
-                } else if (strcmp(argv[i], "-t") == 0) {
-                    run_tests = true;
-                }
-            }
         }
     }
 
@@ -41,14 +25,14 @@ namespace Utils {
         return file;
     }
 
-    // HarmonySearchConfig read_harmony_config(std::ifstream &file) {
-    //     HarmonySearchConfig config = HarmonySearchConfig();
+    DifferentialEvolutionConfig read_differential_evolution_config(std::ifstream &file) {
+        DifferentialEvolutionConfig config = DifferentialEvolutionConfig();
 
-    //     file >> config.W >> config.H;
-    //     file >> config.mem_size >> config.num_iterations;
+        file >> config.W >> config.H;
+        file >> config.pop_size >> config.num_gerations;
 
-    //     return config;
-    // }
+        return config;
+    }
 
     double read_sensor_radius(std::ifstream &file) {
         double radius; file >> radius;
