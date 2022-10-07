@@ -34,28 +34,6 @@ double Sensor::distance_to(Sensor s) {
     );
 }
 
-// double Sensor::min_dist(std::vector<Sensor> sensors, int W, int H) {
-//     double Wm = W - (Sensor::radius - Sensor::radius_err);
-//     double Hm = H - (Sensor::radius - Sensor::radius_err);
-
-//     double max_dist_sensors = sqrt(Wm * Wm + Hm * Hm);
-//     double min_dist_sensors = max_dist_sensors;
-
-//     if (max_dist_sensors == 0) return 1;
-
-//     for (int si = 0; si < sensors.size() - 1; si++) {
-//         for (int sj = si + 1; sj < sensors.size(); sj++) {
-//             if (!sensors[si].active || !sensors[sj].active) continue;
-
-//             double dist = sensors[si].distance_to(sensors[sj]);
-
-//             min_dist_sensors = std::min(min_dist_sensors, dist);
-//         }
-//     }
-    
-//     return min_dist_sensors / max_dist_sensors;
-// }
-
 Sensor Sensor::random_sensor() {
     double x = Random::random_value(x_lower, x_upper);
     double y = Random::random_value(y_lower, y_upper);

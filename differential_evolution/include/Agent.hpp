@@ -16,7 +16,6 @@ class Agent {
         
         Agent();
         Agent(std::vector<Sensor> sensors, std::vector<bool> active_sensors);
-        Agent(std::vector<Sensor> sensors, std::vector<bool> active_sensors, bool fitness);
 
         void set_num_active_sensors(int num_active_sensors);
         void set_domination(bool is_dominant);

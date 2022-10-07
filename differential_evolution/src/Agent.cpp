@@ -9,12 +9,6 @@ Agent::Agent(std::vector<Sensor> sensors, std::vector<bool> active_sensors) {
     this->is_dominant = false;
 }
 
-Agent::Agent(std::vector<Sensor> sensors, std::vector<bool> active_sensors, bool is_dominant) {
-    this->sensors = sensors;
-    this->active_sensors = active_sensors;
-    this->is_dominant = is_dominant;
-}
-
 void Agent::set_num_active_sensors(int num_active_sensors) {
     this->num_active_sensors = num_active_sensors;
 }
@@ -33,5 +27,4 @@ void Agent::calculate_coverage_ratio(std::vector<PointOfInterest> &pois) {
     }
 
     this->coverage_ratio = (double)num_covered_pois / pois.size();
-    // return this->coverage_ratio;
 }
