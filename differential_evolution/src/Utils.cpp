@@ -29,7 +29,7 @@ namespace Utils {
         DifferentialEvolutionConfig config = DifferentialEvolutionConfig();
 
         file >> config.W >> config.H;
-        file >> config.pop_size >> config.num_gerations;
+        file >> config.pop_size >> config.num_generation;
 
         return config;
     }

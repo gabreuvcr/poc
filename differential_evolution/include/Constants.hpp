@@ -12,6 +12,10 @@ namespace Constants {
     const double B1 = 1;
     //Beta 2
     const double B2 = 0.5;
+
+    const double F = 0.1;
+
+    const double CR = 0.8;
 };
 
 #endif

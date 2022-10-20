@@ -3,7 +3,7 @@
 
 class DifferentialEvolutionConfig {
     public:
-        int W, H, pop_size, num_gerations;
+        int W, H, pop_size, num_generation;
 
         DifferentialEvolutionConfig() {}
 };

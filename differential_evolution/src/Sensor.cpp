@@ -27,18 +27,25 @@ void Sensor::set_values(double radius, int W, int H) {
     Sensor::y_upper = H - Sensor::min_radius;
 }
 
-double Sensor::distance_to(Sensor s) {
-    return sqrt(
-        (this->x - s.x) * (this->x - s.x) + 
-        (this->y - s.y) * (this->y - s.y)
-    );
-}
+// double Sensor::distance_to(Sensor s) {
+//     return sqrt(
+//         (this->x - s.x) * (this->x - s.x) + 
+//         (this->y - s.y) * (this->y - s.y)
+//     );
+// }
 
 Sensor Sensor::random_sensor() {
     double x = Random::random_value(x_lower, x_upper);
     double y = Random::random_value(y_lower, y_upper);
 
     return Sensor(x, y);
+}
+
+void Sensor::cout_sensors(std::vector<Sensor> sensors) {
+    for (int s = 0; s < sensors.size(); s++) {
+        std::cout << "(" << sensors[s].x << ", " << sensors[s].y << ") ";
+    }
+    std::cout << std::endl;
 }
 
 void Sensor::cout_sensors(std::vector<Sensor> sensors, std::vector<bool> active_sensors) {
@@ -49,4 +56,5 @@ void Sensor::cout_sensors(std::vector<Sensor> sensors, std::vector<bool> active_
             std::cout << ". ";
         }
     }
+    std::cout << std::endl;
 }

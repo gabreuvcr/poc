@@ -11,8 +11,8 @@
 class DifferentialEvolution {
     private:
         void init_first_population();
-        // std::vector<Sensor> mutation();
-        // std::vector<Sensor> crossover();
+        std::vector<Sensor> mutation_sensors(int i);
+        std::vector<Sensor> crossover_sensors(int i, std::vector<Sensor> mutated_sensors);
         // void selection();
 
         void update_dominat_sensors();
@@ -26,6 +26,7 @@ class DifferentialEvolution {
         DifferentialEvolution(DifferentialEvolutionConfig config, std::vector<PointOfInterest> pois);
         
         void run();
+        void run2();
 };
 
 #endif
