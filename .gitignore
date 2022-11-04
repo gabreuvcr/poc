@@ -2,4 +2,6 @@
 .others/
 output.txt
 input.txt
+*.png
+*.py
 main

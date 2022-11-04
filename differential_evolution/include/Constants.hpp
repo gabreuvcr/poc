@@ -13,9 +13,15 @@ namespace Constants {
     //Beta 2
     const double B2 = 0.5;
 
-    const double F = 0.1;
+    const double F = 0.5;
 
-    const double CR = 0.8;
+    const double CR_DE = 0.8;
+
+    const double MR_C = 0.10;
+
+    const double CR_C = 0.95;
+
+    const double FLIP_COIN = 0.5;
 };
 
 #endif
