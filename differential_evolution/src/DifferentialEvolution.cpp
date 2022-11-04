@@ -146,8 +146,8 @@ void DifferentialEvolution::run() {
 
             generation_count++;
         }
+        population = new_pop;
     } 
-    population = new_pop;
     for (int i = 0; i < config.pop_size; i++) {
         std::cout << population[i].num_active_sensors << "," << population[i].coverage_ratio << ";";
     }
