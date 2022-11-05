@@ -84,14 +84,18 @@ std::vector<bool> DifferentialEvolution::crossover_active_sensors(
         std::vector<bool> agent_active_sensors, 
         std::vector<bool> win_active_sensors
     ) {
-    std::vector<bool> child = std::vector<bool>(this->max_sensores);
-    for (int i = 0; i < this->max_sensores; i++) {
-        if (Random::random() <= Constants::FLIP_COIN) {
-            child[i] = agent_active_sensors[i];
-        } else {
-            child[i] = win_active_sensors[i];
-        }
+    std::vector<bool> child = std::vector<bool>(agent_active_sensors);
+    int pointer = Random::random_value(0, this->max_sensores - 1);
+    for (int i = pointer; i < child.size(); i++) {
+        child[i] = win_active_sensors[i];
     }
+    // for (int i = 0; i < this->max_sensores; i++) {
+    //     if (Random::random() <= Constants::FLIP_COIN) {
+    //         child[i] = agent_active_sensors[i];
+    //     } else {
+    //         child[i] = win_active_sensors[i];
+    //     }
+    // }
     return child;
 }
 
@@ -144,9 +148,9 @@ void DifferentialEvolution::run() {
                 new_pop[i] = population[i];
             }
 
-            generation_count++;
         }
         population = new_pop;
+        generation_count++;
     } 
     for (int i = 0; i < config.pop_size; i++) {
         std::cout << population[i].num_active_sensors << "," << population[i].coverage_ratio << ";";
