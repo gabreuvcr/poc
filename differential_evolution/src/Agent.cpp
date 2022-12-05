@@ -36,13 +36,13 @@ void Agent::calculate_coverage_ratio(std::vector<PointOfInterest> &pois) {
 }
 
 bool Agent::dominates(Agent &agent) {
-    if (this->num_active_sensors > agent.num_active_sensors
-        && this->coverage_ratio < agent.coverage_ratio) {
-            return false;
+    if (this->num_active_sensors < agent.num_active_sensors &&
+        this->coverage_ratio >= agent.coverage_ratio) {
+        return true;
+    } else if (this->num_active_sensors <= agent.num_active_sensors &&
+        this->coverage_ratio > agent.coverage_ratio) {
+        return true;
     }
-    if (this-> num_active_sensors < agent.num_active_sensors
-        || this->coverage_ratio > agent.coverage_ratio) {
-            return true;
-    }
+    
     return false;
 }
