@@ -1,11 +1,16 @@
 #include <fstream>
 #include <string.h>
+#include <algorithm>
 #include <vector>
 #include "Utils.hpp"
 #include "PointOfInterest.hpp"
 
 namespace Utils {
-    void check_arguments(char *argv[], int argc, std::string &filename, bool &fixed_sensors, int &num_fixed_sensors, bool &run_tests) {
+    bool is_number(const std::string &s) {
+        return !s.empty() && std::all_of(s.begin(), s.end(), ::isdigit);
+    }
+
+    void check_arguments(char *argv[], int argc, std::string &filename, bool &fixed_sensors, int &num_fixed_sensors, bool &run_tests, bool &all) {
         if (argc == 1) {
             throw std::runtime_error("Usage: " + std::string(argv[0]) + " <input_file> [-f <value>] [-t]");
             exit(1);
@@ -16,7 +21,7 @@ namespace Utils {
         if (argc >= 3) {
             for (int i = 2; i < argc; i++) {
                 if (strcmp(argv[i], "-f") == 0) {
-                    if (i + 1 >= argc || strcmp(argv[i + 1], "-t") == 0) {
+                    if (i + 1 >= argc || !is_number(argv[i + 1])) {
                         throw std::runtime_error("Fixed sensors numbers is required after -f");
                     }
                     fixed_sensors = true;
@@ -26,6 +31,8 @@ namespace Utils {
                     }
                 } else if (strcmp(argv[i], "-t") == 0) {
                     run_tests = true;
+                } else if (strcmp(argv[i], "-a") == 0) {
+                    all = true;
                 }
             }
         }

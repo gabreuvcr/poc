@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <tuple>
 #include <random>
 #include <algorithm>
 #include "HarmonySearchConfig.hpp"
@@ -29,6 +30,7 @@ class HarmonySearch {
         std::vector<PointOfInterest> pois;
         std::vector<std::vector<Sensor>> HM;
         int max_sensors, min_sensors;
+        int calculate_max_sensors, calculate_min_sensors;
         int i_best, i_worst;
 
         HarmonySearch() {};
@@ -38,6 +40,7 @@ class HarmonySearch {
         double run();
         void cout_harmony_memory(int interation);
         void set_test(bool test);
+        void set_num_fixed_sensors(int num_sensors);
 };
 
 #endif

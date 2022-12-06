@@ -40,12 +40,24 @@ void run_test(HarmonySearchConfig config, std::vector<PointOfInterest> pois, boo
     std::cout << "Standard deviation: " << standard_deviation << std::endl;
 }
 
+void run_all(HarmonySearchConfig config, std::vector<PointOfInterest> pois) {
+    HarmonySearch hs = HarmonySearch(config, pois);
+    int max_sensors = hs.calculate_max_sensors;  
+    int min_sensors = hs.calculate_min_sensors;
+    for (int i = min_sensors; i < max_sensors + 1; i++) {
+        std::cout << "i: " << i << std::endl;
+        hs.set_num_fixed_sensors(i);
+        hs.run();
+    }
+}
+
 int main(int argc, char* argv[]) {
     std::string filename;
     bool fixed_sensors = false; int num_fixed_sensors = 0;
     bool run_tests = false;
+    bool all = false;
 
-    Utils::check_arguments(argv, argc, filename, fixed_sensors, num_fixed_sensors, run_tests);
+    Utils::check_arguments(argv, argc, filename, fixed_sensors, num_fixed_sensors, run_tests, all);
 
     std::ifstream file = Utils::open_file(filename);
 
@@ -63,6 +75,8 @@ int main(int argc, char* argv[]) {
     } else if (fixed_sensors) {
         HarmonySearch hs = HarmonySearch(config, pois, num_fixed_sensors);
         hs.run();
+    } else if (all) {
+        run_all(config, pois);
     } else {
         HarmonySearch hs = HarmonySearch(config, pois);
         hs.run();
