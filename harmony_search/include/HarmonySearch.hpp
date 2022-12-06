@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <vector>
-#include <tuple>
 #include <random>
 #include <algorithm>
 #include "HarmonySearchConfig.hpp"
