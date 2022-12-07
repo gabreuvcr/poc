@@ -35,6 +35,26 @@ void Agent::calculate_coverage_ratio(std::vector<PointOfInterest> &pois) {
     this->coverage_ratio = (double)num_covered_pois / pois.size();
 }
 
+bool Agent::is_weak_dominat(Agent &agent) {
+    if (this->num_active_sensors <= agent.num_active_sensors &&
+        this->coverage_ratio >= agent.coverage_ratio) {
+        return true;
+    }
+    
+    return false;
+}
+
+bool Agent::is_dominant(Agent &agent) {
+    if (this->is_weak_dominat(agent) ||
+        this->num_active_sensors < agent.num_active_sensors ||
+        this->coverage_ratio > agent.coverage_ratio) {
+        
+        return true;
+    }
+
+    return false;
+}
+
 bool Agent::dominates(Agent &agent) {
     if (this->num_active_sensors < agent.num_active_sensors &&
         this->coverage_ratio >= agent.coverage_ratio) {

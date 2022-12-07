@@ -16,6 +16,7 @@ DifferentialEvolution::DifferentialEvolution(DifferentialEvolutionConfig config,
         (config.W / (2 * Sensor::min_radius)) * (config.H / (2 * Sensor::min_radius))
     );
     this->population = std::vector<Agent>(config.pop_size);
+    // std::cout << max_sensores << std::endl;
 }
 
 std::vector<Sensor> DifferentialEvolution::mutation_sensors(int i) {
@@ -89,6 +90,7 @@ std::vector<bool> DifferentialEvolution::crossover_active_sensors(
     for (int i = pointer; i < child.size(); i++) {
         child[i] = win_active_sensors[i];
     }
+    // std::vector<bool> child = std::vector<bool>(this->max_sensores);
     // for (int i = 0; i < this->max_sensores; i++) {
     //     if (Random::random() <= Constants::FLIP_COIN) {
     //         child[i] = agent_active_sensors[i];
@@ -112,50 +114,160 @@ std::vector<bool> DifferentialEvolution::mutation_active_sensors(std::vector<boo
     return active_sensors;
 }
 
+std::vector<Agent> DifferentialEvolution::calculate_crowding_distance(std::vector<Agent>& pop) {
+    const int n = pop.size();
+    for (Agent& a : pop) {
+        a.distance = 0;
+    }
+
+    //number of sensors
+    std::sort(pop.begin(), pop.end(), [](Agent& a, Agent& b) {
+            return a.num_active_sensors < b.num_active_sensors;
+        }
+    );
+    double min = pop.front().num_active_sensors;
+    double max = pop.back().num_active_sensors;
+    pop[0].distance = std::numeric_limits<double>::infinity();
+    pop[n - 1].distance = std::numeric_limits<double>::infinity();
+    
+    for (int i = 1; i < n - 1; i++) {
+        pop[i].distance += 
+            (pop[i + 1].num_active_sensors - pop[i - 1].num_active_sensors) / (max - min);
+    }
+
+    //coverage ratio
+    std::sort(pop.begin(), pop.end(), [](Agent& a, Agent& b) {
+            return a.coverage_ratio < b.coverage_ratio;
+        }
+    );
+    min = pop.front().coverage_ratio;
+    max = pop.back().coverage_ratio;
+    pop[0].distance = std::numeric_limits<double>::infinity();
+    pop[n - 1].distance = std::numeric_limits<double>::infinity();
+    
+    for (int i = 1; i < n - 1; i++) {
+        pop[i].distance += 
+            (pop[i + 1].coverage_ratio - pop[i - 1].coverage_ratio) / (max - min);
+    }
+
+    return pop;
+}
+
+bool agent_doesnt_dominate_anyone(int agent_index, std::vector<Agent>& new_pop) {
+    for (int k = 0; k < new_pop.size(); k++) {
+        if (agent_index == k) continue;
+
+        if (new_pop[agent_index].is_dominant(new_pop[k])) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool agent_with_less_crowding_distance(int agent_index, std::vector<Agent>& new_pop) {
+    for (int k = 0; k < new_pop.size(); k++) {
+        if (agent_index == k) continue;
+
+        if (new_pop[k].is_dominant(new_pop[agent_index])) continue;
+
+        if (new_pop[agent_index].distance > new_pop[k].distance) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+void print_pop(std::vector<Agent>& pop) {
+    for (int i = 0; i < pop.size(); i++) {
+        std::cout << pop[i].num_active_sensors << "," << pop[i].coverage_ratio;
+        if (i != pop.size() - 1) {
+            std::cout << ";";
+        }
+    }
+    std::cout << std::endl;
+}
+
+bool agent_is_not_dominated(int agent_index, std::vector<Agent>& pop) {
+    for (int k = 0; k < pop.size(); k++) {
+        if (agent_index == k) continue;
+
+        if (pop[k].is_dominant(pop[agent_index])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void print_pareto_front(std::vector<Agent>& pop) {
+    for (int j = 0; j < pop.size(); j++) {
+        if (agent_is_not_dominated(j, pop)) {
+            std::cout << pop[j].num_active_sensors << "," << pop[j].coverage_ratio << ";";
+        }
+    }
+    std::cout << std::endl;
+}
+
 void DifferentialEvolution::run() {
     this->init_first_population();
-
     int generation_count = 0;
 
     std::vector<Agent> new_pop = std::vector<Agent>(config.pop_size);
-
-    for (int i = 0; i < config.pop_size; i++) {
-        std::cout << population[i].num_active_sensors << "," << population[i].coverage_ratio << ";";
-    }
-    std::cout << std::endl;
-    
+    int m = 0;
+    print_pop(this->population);
     while (generation_count < config.num_generation) {
         for (int i = 0; i < config.pop_size; i++) {
             Agent agent = population[i];
             Agent trial_agent;
+            
+            std::vector<Sensor> mutated_sensors = mutation_sensors(i);
+            std::vector<Sensor> crossed_sensors = crossover_sensors(agent.sensors, mutated_sensors);
             if (Random::random() <= Constants::FLIP_COIN) {
-                std::vector<Sensor> mutated_sensors = mutation_sensors(i);
-                std::vector<Sensor> crossed_sensors = crossover_sensors(agent.sensors, mutated_sensors);
-                trial_agent = Agent(crossed_sensors, agent.active_sensors);
-            } else {
                 Agent win = tournament_selection(i);
                 std::vector<bool> crossed_active_sensors = crossover_active_sensors(agent.active_sensors, win.active_sensors);
                 std::vector<bool> mutated_active_sensors = mutation_active_sensors(crossed_active_sensors);
-                trial_agent = Agent(agent.sensors, mutated_active_sensors);
+                trial_agent = Agent(crossed_sensors, mutated_active_sensors);
+            } else {
+                trial_agent = Agent(crossed_sensors, agent.active_sensors);
             }
+
             trial_agent.calculate_num_active_sensors();
             trial_agent.calculate_coverage_ratio(pois);
 
-            if (trial_agent.dominates(population[i])) {
+            if (trial_agent.is_weak_dominat(population[i])) {
                 new_pop[i] = trial_agent;
             }
             else {
                 new_pop[i] = population[i];
+                if (!population[i].is_dominant(trial_agent)) {
+                    new_pop.push_back(trial_agent);
+                    m++;
+                }
             }
-
         }
+
+        this->calculate_crowding_distance(new_pop);
+
+        while (m > 0) {
+            int selected_index;
+
+            for (int j = 0; j < new_pop.size(); j++) {
+                if (agent_doesnt_dominate_anyone(j, new_pop) &&
+                    agent_with_less_crowding_distance(j, new_pop)) {
+                    
+                    selected_index = j;
+                }
+            }
+            new_pop.erase(new_pop.begin() + selected_index);
+            m--;
+        }
+
         population = new_pop;
         generation_count++;
-    } 
-    for (int i = 0; i < config.pop_size; i++) {
-        std::cout << population[i].num_active_sensors << "," << population[i].coverage_ratio << ";";
     }
-    std::cout << std::endl;
+
+    print_pop(this->population);
 }
 
 void DifferentialEvolution::init_first_population() {
