@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string.h>
+#include <chrono>
 #include "HarmonySearch.hpp"
 #include "HarmonySearchConfig.hpp"
 #include "PointOfInterest.hpp"
@@ -41,14 +42,19 @@ void run_test(HarmonySearchConfig config, std::vector<PointOfInterest> pois, boo
 }
 
 void run_all(HarmonySearchConfig config, std::vector<PointOfInterest> pois) {
+    auto start_time = std::chrono::high_resolution_clock::now();
     HarmonySearch hs = HarmonySearch(config, pois);
     int max_sensors = hs.calculate_max_sensors;  
     int min_sensors = hs.calculate_min_sensors;
+    hs.set_all(true);
     for (int i = min_sensors; i < max_sensors + 1; i++) {
-        std::cout << "i: " << i << std::endl;
         hs.set_num_fixed_sensors(i);
         hs.run();
     }
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto total_time = end_time - start_time;
+    std::cout << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(total_time).count() << " ms" << std::endl;
 }
 
 int main(int argc, char* argv[]) {

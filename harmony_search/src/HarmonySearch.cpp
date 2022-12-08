@@ -63,11 +63,12 @@ double HarmonySearch::run() {
             }
         }
 
-        if (!test && iteration % 500 == 0) this->cout_harmony_memory(iteration);
+        if ((!test && !all) && iteration % 500 == 0) this->cout_harmony_memory(iteration);
 
         iteration++;
     }
-    if (!test) this->cout_harmony_memory(iteration);
+    if (!test && !all) this->cout_harmony_memory(iteration);
+    if (all) this->cout_only_best();
     return coverage_ratios[i_best];
 }
 
@@ -132,6 +133,10 @@ double HarmonySearch::calculate_coverage_ratio(std::vector<Sensor> sensors) {
     return (double)num_covered_pois / pois.size();
 }
 
+void HarmonySearch::cout_only_best() {
+    std::cout << num_sensors[i_best] << "," << coverage_ratios[i_best] << ";";
+}
+
 void HarmonySearch::cout_harmony_memory(int iteration) {
     std::cout.precision(4);
     std::cout << std::fixed;
@@ -152,4 +157,8 @@ void HarmonySearch::cout_harmony_memory(int iteration) {
 
 void HarmonySearch::set_test(bool test) { 
     this->test = test; 
+};
+
+void HarmonySearch::set_all(bool all) { 
+    this->all = all; 
 };

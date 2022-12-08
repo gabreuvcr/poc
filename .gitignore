@@ -1,7 +1,7 @@
 .vscode/
 .others/
 output.txt
+outputs/
 input.txt
 *.png
-*.py
 main

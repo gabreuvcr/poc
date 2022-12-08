@@ -15,6 +15,7 @@ class HarmonySearch {
         std::vector<double> coverage_ratios;
         std::vector<double> objectives;
         bool test = false;
+        bool all = false;
 
         void init_random_harmony_memory();
         Sensor memory_consideration(int s);
@@ -38,7 +39,9 @@ class HarmonySearch {
 
         double run();
         void cout_harmony_memory(int interation);
+        void cout_only_best();
         void set_test(bool test);
+        void set_all(bool all);
         void set_num_fixed_sensors(int num_sensors);
 };
 
