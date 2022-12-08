@@ -13,11 +13,11 @@ namespace Constants {
     //Beta 2
     const double B2 = 0.5;
 
-    const double F = 0.2;
+    const double F = 0.15;
 
     const double CR_DE = 0.2;
 
-    const double MR_C = 0.05;
+    const double MR_C = 0.15;
 
     const double CR_C = 0.95;
 

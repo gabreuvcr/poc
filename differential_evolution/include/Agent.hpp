@@ -23,7 +23,6 @@ class Agent {
         bool check_dominance(std::vector<PointOfInterest> &pois);
         bool is_dominant(Agent &agent);
         bool is_weak_dominat(Agent &agent);
-        bool dominates(Agent &agent);
 };
 
 #endif

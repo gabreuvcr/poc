@@ -12,6 +12,7 @@ xn xn
 
 run command:
 ./main <input_file> [-f <value>] [-t]
+./main inputs/g1.txt > output.txt && python3 ploting.py
 
 where:
 [ ] = optional

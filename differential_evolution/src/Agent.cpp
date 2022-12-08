@@ -45,24 +45,12 @@ bool Agent::is_weak_dominat(Agent &agent) {
 }
 
 bool Agent::is_dominant(Agent &agent) {
-    if (this->is_weak_dominat(agent) ||
-        this->num_active_sensors < agent.num_active_sensors ||
-        this->coverage_ratio > agent.coverage_ratio) {
+    if (this->is_weak_dominat(agent) &&
+        (this->num_active_sensors < agent.num_active_sensors ||
+        this->coverage_ratio > agent.coverage_ratio)) {
         
         return true;
     }
 
-    return false;
-}
-
-bool Agent::dominates(Agent &agent) {
-    if (this->num_active_sensors < agent.num_active_sensors &&
-        this->coverage_ratio >= agent.coverage_ratio) {
-        return true;
-    } else if (this->num_active_sensors <= agent.num_active_sensors &&
-        this->coverage_ratio > agent.coverage_ratio) {
-        return true;
-    }
-    
     return false;
 }

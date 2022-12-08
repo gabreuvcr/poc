@@ -16,7 +16,7 @@ DifferentialEvolution::DifferentialEvolution(DifferentialEvolutionConfig config,
         (config.W / (2 * Sensor::min_radius)) * (config.H / (2 * Sensor::min_radius))
     );
     this->population = std::vector<Agent>(config.pop_size);
-    // std::cout << max_sensores << std::endl;
+    std::cout << max_sensores << std::endl;
 }
 
 std::vector<Sensor> DifferentialEvolution::mutation_sensors(int i) {
@@ -73,31 +73,51 @@ std::vector<Sensor> DifferentialEvolution::crossover_sensors(std::vector<Sensor>
 }
 
 Agent DifferentialEvolution::tournament_selection(int i) {
-    int a;
+    int a, b;
     do {
         a = Random::random_value(0, config.pop_size - 1);
     } while (a == i);
+    do {
+        b = Random::random_value(0, config.pop_size - 1);
+    } while (b == i || b == a);
     
-    return population[a];
+    if (population[a].is_dominant(population[b])) {
+        return population[a];
+    } else if (population[b].is_dominant(population[a])) {
+        return population[b];
+    } else if (Random::random() <= Constants::FLIP_COIN){
+        return population[a];
+    } else {
+        return population[b];
+    }
+}
+
+int count_num_active_sensors(std::vector<bool> active_sensors) {
+    int num_active_sensors = 0;
+    for (int i = 0; i < active_sensors.size(); i++) {
+        if (active_sensors[i]) {
+            num_active_sensors++;
+        }
+    }
+    return num_active_sensors;
 }
 
 std::vector<bool> DifferentialEvolution::crossover_active_sensors(
         std::vector<bool> agent_active_sensors, 
         std::vector<bool> win_active_sensors
     ) {
-    std::vector<bool> child = std::vector<bool>(agent_active_sensors);
-    int pointer = Random::random_value(0, this->max_sensores - 1);
-    for (int i = pointer; i < child.size(); i++) {
-        child[i] = win_active_sensors[i];
+    std::vector<bool> child = std::vector<bool>(this->max_sensores);
+    for (int i = 0; i < this->max_sensores; i++) {
+        if (Random::random() <= Constants::FLIP_COIN) {
+            child[i] = agent_active_sensors[i];
+        } else {
+            child[i] = win_active_sensors[i];
+        }
     }
-    // std::vector<bool> child = std::vector<bool>(this->max_sensores);
-    // for (int i = 0; i < this->max_sensores; i++) {
-    //     if (Random::random() <= Constants::FLIP_COIN) {
-    //         child[i] = agent_active_sensors[i];
-    //     } else {
-    //         child[i] = win_active_sensors[i];
-    //     }
-    // }
+    if (count_num_active_sensors(child) < this->min_sensores) {
+        return win_active_sensors;
+    }
+
     return child;
 }
 
@@ -105,8 +125,12 @@ std::vector<bool> DifferentialEvolution::mutation_active_sensors(std::vector<boo
     if (Random::random() <= Constants::MR_C) {
         std::vector<bool> mutated_active_sensors(active_sensors);
 
-        int random_sensor = Random::random_value(0, this->max_sensores - 1);
-        mutated_active_sensors[random_sensor] = !active_sensors[random_sensor];
+        int i = 0;
+        do {
+            int random_sensor = Random::random_value(0, this->max_sensores - 1);
+            mutated_active_sensors[random_sensor] = !active_sensors[random_sensor];
+            i++;
+        } while (i < 2 || count_num_active_sensors(mutated_active_sensors) < this->min_sensores);
 
         return mutated_active_sensors;
     }
@@ -221,15 +245,15 @@ void DifferentialEvolution::run() {
             Agent agent = population[i];
             Agent trial_agent;
             
-            std::vector<Sensor> mutated_sensors = mutation_sensors(i);
-            std::vector<Sensor> crossed_sensors = crossover_sensors(agent.sensors, mutated_sensors);
-            if (Random::random() <= Constants::FLIP_COIN) {
+           if (Random::random() <= Constants::FLIP_COIN) {
+                std::vector<Sensor> mutated_sensors = mutation_sensors(i);
+                std::vector<Sensor> crossed_sensors = crossover_sensors(agent.sensors, mutated_sensors);
+                trial_agent = Agent(crossed_sensors, agent.active_sensors);
+            } else {
                 Agent win = tournament_selection(i);
                 std::vector<bool> crossed_active_sensors = crossover_active_sensors(agent.active_sensors, win.active_sensors);
                 std::vector<bool> mutated_active_sensors = mutation_active_sensors(crossed_active_sensors);
-                trial_agent = Agent(crossed_sensors, mutated_active_sensors);
-            } else {
-                trial_agent = Agent(crossed_sensors, agent.active_sensors);
+                trial_agent = Agent(agent.sensors, mutated_active_sensors);
             }
 
             trial_agent.calculate_num_active_sensors();
@@ -255,7 +279,6 @@ void DifferentialEvolution::run() {
             for (int j = 0; j < new_pop.size(); j++) {
                 if (agent_doesnt_dominate_anyone(j, new_pop) &&
                     agent_with_less_crowding_distance(j, new_pop)) {
-                    
                     selected_index = j;
                 }
             }
@@ -267,7 +290,7 @@ void DifferentialEvolution::run() {
         generation_count++;
     }
 
-    print_pop(this->population);
+    print_pareto_front(this->population);
 }
 
 void DifferentialEvolution::init_first_population() {
@@ -279,6 +302,7 @@ void DifferentialEvolution::init_first_population() {
         }
 
         std::vector<bool> active_sensors(max_sensores, false);
+        
         int num_active_sensors = Random::random_value(min_sensores, max_sensores);
 
         for (int j = 0; j < num_active_sensors; j++) {
