@@ -11,7 +11,7 @@ x2 y2
 xn xn
 
 run command:
-./main <input_file> [-f <value>] [-t]
+./main <input_file> [-f <value>]
 
 where:
 [ ] = optional
@@ -19,4 +19,3 @@ where:
 input_file = path to input file
 -f = fixed number of sensors
 value = number of fixed sensors
--t = run tests
