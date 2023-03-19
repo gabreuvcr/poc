@@ -3,5 +3,6 @@
 output.txt
 outputs/
 input.txt
+todo.txt
 *.png
 main

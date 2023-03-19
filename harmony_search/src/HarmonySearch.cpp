@@ -63,11 +63,11 @@ double HarmonySearch::run() {
             }
         }
 
-        if ((!test && !all) && iteration % 500 == 0) this->cout_harmony_memory(iteration);
+        if (!all && iteration % 500 == 0) this->cout_harmony_memory(iteration);
 
         iteration++;
     }
-    if (!test && !all) this->cout_harmony_memory(iteration);
+    if (!all) this->cout_harmony_memory(iteration);
     if (all) this->cout_only_best();
     return coverage_ratios[i_best];
 }
@@ -154,11 +154,3 @@ void HarmonySearch::cout_harmony_memory(int iteration) {
     }
     std::cout << std::endl;
 }
-
-void HarmonySearch::set_test(bool test) { 
-    this->test = test; 
-};
-
-void HarmonySearch::set_all(bool all) { 
-    this->all = all; 
-};

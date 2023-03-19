@@ -10,7 +10,7 @@ namespace Utils {
         return !s.empty() && std::all_of(s.begin(), s.end(), ::isdigit);
     }
 
-    void check_arguments(char *argv[], int argc, std::string &filename, bool &fixed_sensors, int &num_fixed_sensors, bool &run_tests, bool &all) {
+    void check_arguments(char *argv[], int argc, std::string &filename, bool &fixed_sensors, int &num_fixed_sensors) {
         if (argc == 1) {
             throw std::runtime_error("Usage: " + std::string(argv[0]) + " <input_file> [-f <value>] [-t]");
             exit(1);
@@ -29,10 +29,6 @@ namespace Utils {
                     if (num_fixed_sensors <= 0) {
                         throw std::runtime_error("Fixed sensors number must be a valid value");
                     }
-                } else if (strcmp(argv[i], "-t") == 0) {
-                    run_tests = true;
-                } else if (strcmp(argv[i], "-a") == 0) {
-                    all = true;
                 }
             }
         }
