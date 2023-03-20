@@ -62,13 +62,8 @@ double HarmonySearch::run() {
                 update_best_and_worst_index();
             }
         }
-
-        if (!all && iteration % 500 == 0) this->cout_harmony_memory(iteration);
-
         iteration++;
     }
-    if (!all) this->cout_harmony_memory(iteration);
-    if (all) this->cout_only_best();
     return coverage_ratios[i_best];
 }
 
@@ -131,26 +126,4 @@ double HarmonySearch::calculate_coverage_ratio(std::vector<Sensor> sensors) {
         }
     }
     return (double)num_covered_pois / pois.size();
-}
-
-void HarmonySearch::cout_only_best() {
-    std::cout << num_sensors[i_best] << "," << coverage_ratios[i_best] << ";";
-}
-
-void HarmonySearch::cout_harmony_memory(int iteration) {
-    std::cout.precision(4);
-    std::cout << std::fixed;
-
-    std::cout << "coverage ratios: " << coverage_ratios[i_best] << " | ";
-    std::cout << "sensors: " << num_sensors[i_best] << " | ";
-    std::cout << "objective: " << objectives[i_best] << " | ";
-    std::cout << iteration << "/"<< config.num_iterations << std::endl;
-    std::cout << std::endl;
-
-    if (iteration == config.num_iterations) {
-        std::cout << "max: " << max_sensors << " min: " << min_sensors << std::endl;
-        std::cout << "Sensors: " << std::endl;
-        Sensor::cout_sensors(HM[i_best]);
-    }
-    std::cout << std::endl;
 }
