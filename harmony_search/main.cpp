@@ -24,11 +24,11 @@ void run_all(HarmonySearchConfig config, std::vector<PointOfInterest> pois) {
     std::chrono::duration<double> total_time_per_run{ 0 };
 
     for (int i = min_sensors; i < max_sensors + 1; i++) { 
+        hs.set_num_fixed_sensors(i);
         double coverage_sum = 0;
-
+        
         auto start_time = std::chrono::high_resolution_clock::now();
         for (int run = 0; run < RUNS; run++) {
-            hs.set_num_fixed_sensors(i);
             double curr_coverage = hs.run();
 
             coverage_sum += curr_coverage;
@@ -48,7 +48,9 @@ void run_all(HarmonySearchConfig config, std::vector<PointOfInterest> pois) {
     }
 
     for (int i = min_sensors; i < num_sensors_full_coverage + 1; i++) {
-        std::cout << i << "(" << coverage_min[i] << "|"  << coverage_average[i] << "|" << coverage_max[i] << ");";;
+        std::cout << i << "|" << coverage_min[i] << "|";
+        std::cout << coverage_average[i] << "|";
+        std::cout << coverage_max[i] << "|;";
     }
 
     std::cout << std::endl;
