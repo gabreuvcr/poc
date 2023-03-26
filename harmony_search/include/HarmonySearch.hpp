@@ -27,7 +27,7 @@ class HarmonySearch {
         std::vector<double> coverage_ratios;
         std::vector<double> objectives;
         int max_sensors, min_sensors;
-        int calculate_max_sensors, calculate_min_sensors;
+        int calculated_max_sensors, calculated_min_sensors;
         int i_best, i_worst;
         bool all = false;
 

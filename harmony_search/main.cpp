@@ -12,21 +12,21 @@
 
 void run_all(HarmonySearchConfig config, std::vector<PointOfInterest> pois) {
     HarmonySearch hs = HarmonySearch(config, pois);
-    int max_sensors = hs.calculate_max_sensors;  
-    int min_sensors = hs.calculate_min_sensors;
+    hs.all = true;
+    
+    int max_sensors = hs.calculated_max_sensors;
+    int min_sensors = hs.calculated_min_sensors;
     bool reached_full_coverage = false;
     int num_sensors_full_coverage = max_sensors;
-    std::chrono::nanoseconds total_time{ 0 };
-    
-    hs.all = true;
     std::vector<double> coverage_average(max_sensors + 1);
     std::vector<double> coverage_max(max_sensors + 1, std::numeric_limits<double>::min());
     std::vector<double> coverage_min(max_sensors + 1, std::numeric_limits<double>::max());
+    std::chrono::duration<double> total_time_per_run{ 0 };
 
-    for (int i = min_sensors; i < max_sensors + 1; i++) {
-        auto start_time = std::chrono::high_resolution_clock::now();
-        
+    for (int i = min_sensors; i < max_sensors + 1; i++) { 
         double coverage_sum = 0;
+
+        auto start_time = std::chrono::high_resolution_clock::now();
         for (int run = 0; run < RUNS; run++) {
             hs.set_num_fixed_sensors(i);
             double curr_coverage = hs.run();
@@ -40,24 +40,19 @@ void run_all(HarmonySearchConfig config, std::vector<PointOfInterest> pois) {
                 num_sensors_full_coverage = i;
             }
         }
-
         auto end_time = std::chrono::high_resolution_clock::now();
 
-        total_time += (end_time - start_time) / RUNS;
+        total_time_per_run += (end_time - start_time) / RUNS;
         coverage_average[i] = coverage_sum / RUNS;
         if (reached_full_coverage) break;
     }
 
     for (int i = min_sensors; i < num_sensors_full_coverage + 1; i++) {
-        std::cout << i << "," << coverage_average[i] << ";";;
-    }
-    std::cout << std::endl;
-    for (int i = min_sensors; i < num_sensors_full_coverage + 1; i++) {
-        std::cout << i << "(" << coverage_min[i] << "|" << coverage_max[i] << ");";;
+        std::cout << i << "(" << coverage_min[i] << "|"  << coverage_average[i] << "|" << coverage_max[i] << ");";;
     }
 
     std::cout << std::endl;
-    std::cout << std::chrono::duration_cast<std::chrono::seconds>(total_time).count() << " s" << std::endl;
+    std::cout << total_time_per_run.count() << " s" << std::endl;
 }
 
 int main(int argc, char* argv[]) {

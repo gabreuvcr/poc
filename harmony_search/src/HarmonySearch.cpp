@@ -6,14 +6,14 @@ HarmonySearch::HarmonySearch(HarmonySearchConfig config, std::vector<PointOfInte
     this->config = config;
     this->pois = pois;
 
-    this->calculate_min_sensors = ceil(
+    this->calculated_min_sensors = ceil(
         (config.W / (2 * Sensor::max_radius)) * (config.H / (2 * Sensor::max_radius))
     );
-    this->calculate_max_sensors = ceil(
+    this->calculated_max_sensors = ceil(
         (config.W / (2 * Sensor::min_radius)) * (config.H / (2 * Sensor::min_radius))
     );
-    this->min_sensors = calculate_min_sensors;
-    this->max_sensors = calculate_max_sensors;
+    this->min_sensors = calculated_min_sensors;
+    this->max_sensors = calculated_max_sensors;
 
     HM.resize(config.mem_size);
     num_sensors.resize(config.mem_size);

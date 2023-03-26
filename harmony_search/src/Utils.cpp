@@ -12,7 +12,7 @@ namespace Utils {
 
     void check_arguments(char *argv[], int argc, std::string &filename, bool &fixed_sensors, int &num_fixed_sensors) {
         if (argc == 1) {
-            throw std::runtime_error("Usage: " + std::string(argv[0]) + " <input_file> [-f <value>] [-t]");
+            throw std::runtime_error("Usage: " + std::string(argv[0]) + " <input_file> [-f <value>]");
             exit(1);
         }
         if (argc >= 2) {
