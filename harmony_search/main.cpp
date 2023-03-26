@@ -60,8 +60,9 @@ void run_all(HarmonySearchConfig config, std::vector<PointOfInterest> pois) {
 int main(int argc, char* argv[]) {
     std::string filename;
     bool fixed_sensors = false; int num_fixed_sensors = 0;
+    bool all = false;
 
-    Utils::check_arguments(argv, argc, filename, fixed_sensors, num_fixed_sensors);
+    Utils::check_arguments(argv, argc, filename, all, fixed_sensors, num_fixed_sensors);
 
     std::ifstream file = Utils::open_file(filename);
 
@@ -73,12 +74,13 @@ int main(int argc, char* argv[]) {
     std::vector<PointOfInterest> pois = Utils::read_pois(file, config.W, config.H);
 
     Sensor::set_values(radius, radius_err, config.W, config.H);
-
-    if (fixed_sensors) {
-        HarmonySearch hs = HarmonySearch(config, pois, num_fixed_sensors);
-        hs.run();
-    } else {
+    
+    if (all) {
         run_all(config, pois);
+    } else if (fixed_sensors) {
+        HarmonySearch hs = HarmonySearch(config, pois, num_fixed_sensors);
+        double curr_coverage = hs.run();
+        std::cout << num_fixed_sensors << ": " << curr_coverage << std::endl;
     }
 
     return 0;

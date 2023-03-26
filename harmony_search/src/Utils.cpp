@@ -10,25 +10,33 @@ namespace Utils {
         return !s.empty() && std::all_of(s.begin(), s.end(), ::isdigit);
     }
 
-    void check_arguments(char *argv[], int argc, std::string &filename, bool &fixed_sensors, int &num_fixed_sensors) {
-        if (argc == 1) {
-            throw std::runtime_error("Usage: " + std::string(argv[0]) + " <input_file> [-f <value>]");
-            exit(1);
-        }
-        if (argc >= 2) {
-            filename = argv[1];
-        }
+    void invalid_arguments() {
+        throw std::runtime_error("Usage: ./main <input_file> < -all ^ -f <value> >");
+        exit(1);
+    }
+
+    void check_arguments(char *argv[], int argc, std::string &filename, bool &all, bool &fixed_sensors, int &num_fixed_sensors) {
+        if (argc <= 2) invalid_arguments();
+
+        if (argc >= 2) filename = argv[1];
+
         if (argc >= 3) {
             for (int i = 2; i < argc; i++) {
+                if (all || fixed_sensors) invalid_arguments();
+
                 if (strcmp(argv[i], "-f") == 0) {
                     if (i + 1 >= argc || !is_number(argv[i + 1])) {
-                        throw std::runtime_error("Fixed sensors numbers is required after -f");
+                        throw std::runtime_error("Positive number of fixed sensors are required after -f");
                     }
                     fixed_sensors = true;
                     num_fixed_sensors = atoi(argv[++i]);
                     if (num_fixed_sensors <= 0) {
-                        throw std::runtime_error("Fixed sensors number must be a valid value");
+                        throw std::runtime_error("The number of fixed sensors must be a valid number");
                     }
+                } else if (strcmp(argv[i], "-all") == 0) {
+                    all = true;
+                } else {
+                    invalid_arguments();
                 }
             }
         }
