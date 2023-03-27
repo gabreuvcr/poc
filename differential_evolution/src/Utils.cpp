@@ -1,10 +1,26 @@
 #include <fstream>
 #include <string.h>
 #include <vector>
+#include <chrono>
 #include "Utils.hpp"
-#include "PointOfInterest.hpp"
+// #include "PointOfInterest.hpp"
 
 namespace Utils {
+    void log_population(std::vector<Agent> population) {
+        for (int i = 0; i < population.size(); i++) {
+            std::cout << population[i].num_active_sensors << "|";
+            std::cout << population[i].coverage_ratio << ";";
+            // if (i != population.size() - 1) {
+            //     std::cout << ";";
+            // }
+        }
+        std::cout << std::endl;
+    }
+
+    void log_time(std::chrono::duration<double> time) {
+        std::cout << "Tempo total medio: " << time.count() << " s" << std::endl;
+    }
+
     void invalid_argument() {
         throw std::runtime_error("Usage: ./main <input_file> [-all]");
         exit(1);

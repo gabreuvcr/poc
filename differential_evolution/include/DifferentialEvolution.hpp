@@ -31,7 +31,6 @@ class DifferentialEvolution {
         std::vector<Agent> run();
         std::vector<Agent> get_pareto_front();
         std::vector<Agent> get_pareto_front(std::vector<Agent> &population);
-        void print_population(std::vector<Agent>& population);
 };
 
 #endif

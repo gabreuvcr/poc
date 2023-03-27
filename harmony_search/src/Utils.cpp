@@ -6,6 +6,25 @@
 #include "PointOfInterest.hpp"
 
 namespace Utils {
+    void log_population(
+        int min_sensors, 
+        int last_number_of_sensors, 
+        std::vector<double> coverage_min, 
+        std::vector<double> coverage_max, 
+        std::vector<double> coverage_average
+    ) {
+        for (int i = min_sensors; i <= last_number_of_sensors; i++) {
+            std::cout << i << "|" << coverage_min[i] << "|";
+            std::cout << coverage_average[i] << "|";
+            std::cout << coverage_max[i] << ";";
+        }
+        std::cout << std::endl;
+    }
+
+    void log_time(std::chrono::duration<double> time) {
+        std::cout << "Tempo total medio: " << time.count() << "s" << std::endl;
+    }
+
     bool is_number(const std::string &s) {
         return !s.empty() && std::all_of(s.begin(), s.end(), ::isdigit);
     }
@@ -15,7 +34,14 @@ namespace Utils {
         exit(1);
     }
 
-    void check_arguments(char *argv[], int argc, std::string &filename, bool &all, bool &fixed_sensors, int &num_fixed_sensors) {
+    void check_arguments(
+        char *argv[], 
+        int argc, 
+        std::string &filename, 
+        bool &all, 
+        bool &fixed_sensors, 
+        int &num_fixed_sensors
+    ) {
         if (argc <= 2) invalid_arguments();
 
         if (argc >= 2) filename = argv[1];

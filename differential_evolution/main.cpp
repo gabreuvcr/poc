@@ -42,21 +42,20 @@ void run_all(DifferentialEvolutionConfig config, std::vector<PointOfInterest> po
 
     std::vector<Agent> pareto_fronts_merged;
     for (int i = 0; i < pareto_fronts.size(); i++) {
-        de.print_population(pareto_fronts[i]);
-        
+        Utils::log_population(pareto_fronts[i]);
+
         pareto_fronts_merged.insert(
             pareto_fronts_merged.end(), 
             pareto_fronts[i].begin(), 
             pareto_fronts[i].end()
         );
     }
-    
+
     std::vector<Agent> pareto_front_final = de.get_pareto_front(pareto_fronts_merged);
     remove_duplicate_from_pareto_front(pareto_front_final);
-    de.print_population(pareto_front_final);
 
-    std::cout << std::endl;
-    std::cout << "Tempo total medio: " << average_total_time.count() << " s" << std::endl;
+    Utils::log_population(pareto_front_final);
+    Utils::log_time(average_total_time);
 }
 
 int main(int argc, char* argv[]) {
@@ -81,7 +80,7 @@ int main(int argc, char* argv[]) {
         DifferentialEvolution de = DifferentialEvolution(config, pois);
         de.run();
         std::vector<Agent> pareto_front = de.get_pareto_front();
-        de.print_population(pareto_front);
+        Utils::log_population(pareto_front);
     }
     
     return 0;

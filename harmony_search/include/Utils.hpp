@@ -3,11 +3,27 @@
 
 #include <iostream>
 #include <fstream>
+#include <chrono>
 #include "HarmonySearchConfig.hpp"
 #include "PointOfInterest.hpp"
 
 namespace Utils {
-    void check_arguments(char *argv[], int argc, std::string &filename, bool &all, bool &fixed_sensors, int &fixed_sensors_num);
+    void log_population(
+        int min_sensors, 
+        int last_number_of_sensors, 
+        std::vector<double> coverage_min, 
+        std::vector<double> coverage_max, 
+        std::vector<double> coverage_average
+    );
+    void log_time(std::chrono::duration<double> time);
+    void check_arguments(
+        char *argv[], 
+        int argc, 
+        std::string &filename, 
+        bool &all, 
+        bool &fixed_sensors, 
+        int &fixed_sensors_num
+    );
     std::ifstream open_file(std::string filename);
     HarmonySearchConfig read_harmony_config(std::ifstream &file);
     double read_sensor_radius(std::ifstream &file);

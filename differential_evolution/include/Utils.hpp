@@ -5,8 +5,11 @@
 #include <fstream>
 #include "DifferentialEvolutionConfig.hpp"
 #include "PointOfInterest.hpp"
+#include "Agent.hpp"
 
 namespace Utils {
+    void log_population(std::vector<Agent> population);
+    void log_time(std::chrono::duration<double> time);
     void check_arguments(char *argv[], int argc, std::string &filename, bool &all);
     std::ifstream open_file(std::string filename);
     DifferentialEvolutionConfig read_differential_evolution_config(std::ifstream &file);

@@ -36,7 +36,6 @@ type_plot = argv[3] # line or scatter
 f = open(output_file, 'r')
 markers = ['o', 'v', 's', 'p', '*', 'h', 'H', 'D', 'd', 'P', 'X']
 sizes = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10]
-# colors = ["#ffdab9", "#6495ed", "#ff00ff", "#00ffff", "#00ff00", "#ffd700", "#ff4500", "#b03060", "#00008b", "#006400"]
 colors = ["#99F2D1", "#8BDEC0", "#7DCAAE", "#6FB69D", "#61A28C", "#548E7A", "#467A69", "#386658", "#2A5246", "#1C3E35"]
 for i in range(0, 10):
     x_de, y_de = get_output_splited(f)
@@ -52,6 +51,5 @@ for i in range(0, 10):
 
 plt.title("")
 plt.tight_layout()
-
 plt.hlines(y=1, linestyles='--', xmin=0, xmax=max_sensors+1, colors='#000', alpha=0.15)
 plt.savefig(path_save, dpi=300)

@@ -202,17 +202,6 @@ bool agent_with_less_crowding_distance(int agent_index, std::vector<Agent>& new_
     return true;
 }
 
-void DifferentialEvolution::print_population(std::vector<Agent>& population) {
-    for (int i = 0; i < population.size(); i++) {
-        std::cout << population[i].num_active_sensors << "|";
-        std::cout << population[i].coverage_ratio << ";";
-        // if (i != population.size() - 1) {
-        //     std::cout << ";";
-        // }
-    }
-    std::cout << std::endl;
-}
-
 bool agent_is_not_dominated(int agent_index, std::vector<Agent>& pop) {
     for (int k = 0; k < pop.size(); k++) {
         if (agent_index == k) continue;
