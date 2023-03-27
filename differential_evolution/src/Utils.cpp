@@ -5,13 +5,27 @@
 #include "PointOfInterest.hpp"
 
 namespace Utils {
-    void check_arguments(char *argv[], int argc, std::string &filename) {
-        if (argc == 1) {
-            throw std::runtime_error("Usage: " + std::string(argv[0]) + " <input_file> [-f <value>] [-t]");
-            exit(1);
-        }
-        if (argc >= 2) {
-            filename = argv[1];
+    void invalid_argument() {
+        throw std::runtime_error("Usage: ./main <input_file> [-all]");
+        exit(1);
+    }
+    
+    void check_arguments(char *argv[], int argc, std::string &filename, bool &all) {
+        if (argc < 2) invalid_argument();
+
+        if (argc >= 2) filename = argv[1];
+        
+        if (argc >= 3) {
+            for (int i = 2; i < argc; i++) {
+                if (all) invalid_argument();
+
+                if (strcmp(argv[i], "-all") == 0) {
+                    all = true;
+                }
+                else {
+                    invalid_argument();
+                }
+            }
         }
     }
 

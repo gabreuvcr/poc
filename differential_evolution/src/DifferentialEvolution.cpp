@@ -16,7 +16,6 @@ DifferentialEvolution::DifferentialEvolution(DifferentialEvolutionConfig config,
         (config.W / (2 * Sensor::min_radius)) * (config.H / (2 * Sensor::min_radius))
     );
     this->population = std::vector<Agent>(config.pop_size);
-    std::cout << max_sensores << std::endl;
 }
 
 std::vector<Sensor> DifferentialEvolution::mutation_sensors(int i) {
@@ -203,12 +202,13 @@ bool agent_with_less_crowding_distance(int agent_index, std::vector<Agent>& new_
     return true;
 }
 
-void print_pop(std::vector<Agent>& pop) {
-    for (int i = 0; i < pop.size(); i++) {
-        std::cout << pop[i].num_active_sensors << "," << pop[i].coverage_ratio;
-        if (i != pop.size() - 1) {
-            std::cout << ";";
-        }
+void DifferentialEvolution::print_population(std::vector<Agent>& population) {
+    for (int i = 0; i < population.size(); i++) {
+        std::cout << population[i].num_active_sensors << "|";
+        std::cout << population[i].coverage_ratio << ";";
+        // if (i != population.size() - 1) {
+        //     std::cout << ";";
+        // }
     }
     std::cout << std::endl;
 }
@@ -224,22 +224,31 @@ bool agent_is_not_dominated(int agent_index, std::vector<Agent>& pop) {
     return true;
 }
 
-void print_pareto_front(std::vector<Agent>& pop) {
-    for (int j = 0; j < pop.size(); j++) {
-        if (agent_is_not_dominated(j, pop)) {
-            std::cout << pop[j].num_active_sensors << "," << pop[j].coverage_ratio << ";";
+std::vector<Agent> DifferentialEvolution::get_pareto_front() {
+    std::vector<Agent> pareto_front;
+    for (int j = 0; j < this->population.size(); j++) {
+        if (agent_is_not_dominated(j, this->population)) {
+            pareto_front.push_back(this->population[j]);
         }
     }
-    std::cout << std::endl;
+    return pareto_front;
 }
 
-void DifferentialEvolution::run() {
+std::vector<Agent> DifferentialEvolution::get_pareto_front(std::vector<Agent>& population) {
+    std::vector<Agent> pareto_front;
+    for (int j = 0; j < population.size(); j++) {
+        if (agent_is_not_dominated(j, population)) {
+            pareto_front.push_back(population[j]);
+        }
+    }
+    return pareto_front;
+}
+
+std::vector<Agent> DifferentialEvolution::run() {
     this->init_first_population();
     int generation_count = 0;
-
     std::vector<Agent> new_pop = std::vector<Agent>(config.pop_size);
     int m = 0;
-    print_pop(this->population);
     while (generation_count < config.num_generation) {
         for (int i = 0; i < config.pop_size; i++) {
             Agent agent = population[i];
@@ -290,7 +299,7 @@ void DifferentialEvolution::run() {
         generation_count++;
     }
 
-    print_pareto_front(this->population);
+    return this->population;
 }
 
 void DifferentialEvolution::init_first_population() {

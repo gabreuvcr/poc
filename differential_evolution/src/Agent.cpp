@@ -54,3 +54,8 @@ bool Agent::is_dominant(Agent &agent) {
 
     return false;
 }
+
+bool Agent::operator ==(const Agent& other) {
+    return this->num_active_sensors == other.num_active_sensors
+        && this->coverage_ratio == other.coverage_ratio;
+}

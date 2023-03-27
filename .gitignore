@@ -1,7 +1,8 @@
 .vscode/
 .others/
 output.txt
-outputs/
+old/
+plots/
 input.txt
 todo.txt
 *.png
