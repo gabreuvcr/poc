@@ -12,7 +12,6 @@
 
 void run_all(HarmonySearchConfig config, std::vector<PointOfInterest> pois) {
     HarmonySearch hs = HarmonySearch(config, pois);
-    hs.all = true;
     
     int max_sensors = hs.calculated_max_sensors;
     int min_sensors = hs.calculated_min_sensors;
@@ -21,7 +20,7 @@ void run_all(HarmonySearchConfig config, std::vector<PointOfInterest> pois) {
     std::vector<double> coverage_average(max_sensors + 1);
     std::vector<double> coverage_max(max_sensors + 1, std::numeric_limits<double>::min());
     std::vector<double> coverage_min(max_sensors + 1, std::numeric_limits<double>::max());
-    std::chrono::duration<double> total_time_per_run{ 0 };
+    std::chrono::duration<double> average_total_time { 0 };
 
     for (int i = min_sensors; i < max_sensors + 1; i++) { 
         hs.set_num_fixed_sensors(i);
@@ -42,7 +41,7 @@ void run_all(HarmonySearchConfig config, std::vector<PointOfInterest> pois) {
         }
         auto end_time = std::chrono::high_resolution_clock::now();
 
-        total_time_per_run += (end_time - start_time) / RUNS;
+        average_total_time += (end_time - start_time) / RUNS;
         coverage_average[i] = coverage_sum / RUNS;
         if (reached_full_coverage) break;
     }
@@ -54,7 +53,7 @@ void run_all(HarmonySearchConfig config, std::vector<PointOfInterest> pois) {
     }
 
     std::cout << std::endl;
-    std::cout << total_time_per_run.count() << " s" << std::endl;
+    std::cout << "Tempo total medio: " << average_total_time.count() << " s" << std::endl;
 }
 
 int main(int argc, char* argv[]) {

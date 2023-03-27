@@ -29,7 +29,6 @@ class HarmonySearch {
         int max_sensors, min_sensors;
         int calculated_max_sensors, calculated_min_sensors;
         int i_best, i_worst;
-        bool all = false;
 
         HarmonySearch() {};
         HarmonySearch(HarmonySearchConfig config, std::vector<PointOfInterest> pois);
