@@ -15,9 +15,9 @@ Sensor::Sensor(double x, double y) {
     this->x = x; this->y = y;
 }
 
-void Sensor::set_values(double radius, int W, int H) {
+void Sensor::set_values(double radius, double radius_err, int W, int H) {
     Sensor::radius = radius;
-    Sensor::radius_err = radius * 0.5;
+    Sensor::radius_err = radius_err;
 
     Sensor::max_radius = radius + radius_err;
     Sensor::min_radius = radius - radius_err;

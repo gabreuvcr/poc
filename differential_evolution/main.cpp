@@ -69,10 +69,11 @@ int main(int argc, char* argv[]) {
     DifferentialEvolutionConfig config = Utils::read_differential_evolution_config(file);
 
     double radius = Utils::read_sensor_radius(file);
+    double radius_err = radius * 0.5;
 
     std::vector<PointOfInterest> pois = Utils::read_pois(file, config.W, config.H);
 
-    Sensor::set_values(radius, config.W, config.H);
+    Sensor::set_values(radius, radius_err, config.W, config.H);
 
     if (all) {
         run_all(config, pois);
