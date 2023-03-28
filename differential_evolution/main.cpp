@@ -8,6 +8,7 @@
 #include "Utils.hpp"
 #include "Sensor.hpp"
 #include "Agent.hpp"
+#include "Constants.hpp"
 
 #define RUNS 10
 
@@ -56,6 +57,7 @@ void run_all(DifferentialEvolutionConfig config, std::vector<PointOfInterest> po
 
     Utils::log_population(pareto_front_final);
     Utils::log_time(average_total_time);
+    Utils::log_seed(Constants::SEED);
 }
 
 int main(int argc, char* argv[]) {

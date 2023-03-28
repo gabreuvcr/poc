@@ -16,6 +16,7 @@ namespace Utils {
         std::vector<double> coverage_average
     );
     void log_time(std::chrono::duration<double> time);
+    void log_seed(int seed);
     void check_arguments(
         char *argv[], 
         int argc, 

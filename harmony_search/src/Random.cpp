@@ -1,4 +1,5 @@
 #include "Random.hpp"
+#include "Constants.hpp"
 
 namespace Random {
     double random() {
@@ -13,6 +14,6 @@ namespace Random {
         return floor(min + (max - min + 1) * random());
     }
 
-    std::mt19937 rng = std::mt19937(std::random_device{}());
+    std::mt19937 rng = std::mt19937(Constants::SEED);
     std::uniform_real_distribution<> dist_0_1 = std::uniform_real_distribution<>(0, 1);
 }

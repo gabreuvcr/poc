@@ -7,6 +7,7 @@
 #include "PointOfInterest.hpp"
 #include "Utils.hpp"
 #include "Sensor.hpp"
+#include "Constants.hpp"
 
 #define RUNS 10
 
@@ -53,8 +54,8 @@ void run_all(HarmonySearchConfig config, std::vector<PointOfInterest> pois) {
         coverage_max, 
         coverage_average 
     );
-
     Utils::log_time(average_total_time);
+    Utils::log_seed(Constants::SEED);
 }
 
 int main(int argc, char* argv[]) {

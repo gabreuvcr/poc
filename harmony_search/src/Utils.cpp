@@ -22,7 +22,11 @@ namespace Utils {
     }
 
     void log_time(std::chrono::duration<double> time) {
-        std::cout << "Tempo total medio: " << time.count() << "s" << std::endl;
+        std::cout << "Average time: " << time.count() << "s" << std::endl;
+    }
+
+    void log_seed(int seed) {
+        std::cout << "Seed: " << seed << std::endl;
     }
 
     bool is_number(const std::string &s) {
