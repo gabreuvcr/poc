@@ -30,6 +30,7 @@ colors = [
 
 output_file = argv[1]
 path_save = argv[2]
+instance_n = argv[3]
 max_sensors = -1;
 
 f = open(output_file, 'r')
@@ -45,7 +46,7 @@ plt.errorbar(
     fmt='o', ecolor = "#000", capsize=2, color=colors[3]
 )
 
-plt.title("Harmony Search: Instância 1")
+plt.title(f"Harmony Search: Instância {instance_n}")
 plt.legend()
 plt.xlim(0, max_sensors + 1)
 plt.ylim(0, 1.1)

@@ -21,6 +21,7 @@ colors = [
 
 output_file = argv[1]
 path_save = argv[2]
+instance_n = argv[3]
 max_sensors = -1;
 
 f = open(output_file, 'r')
@@ -42,7 +43,7 @@ for i in range(0, 10):
     # ## line
     # plt.plot(x_de, y_de, label=f'{i + 1}', linestyle=':')
 
-plt.title("Differential Evolution: Instância 1")
+plt.title(f"Differential Evolution: Instância {instance_n}")
 plt.legend()
 plt.xlim(0, max_sensors + 1)
 plt.ylim(0, 1.1)

@@ -34,6 +34,7 @@ colors = [
 de_output_file = argv[1]
 hs_output_file = argv[2]
 path_save = argv[3]
+instance_n = argv[4]
 max_sensors = -1;
 
 
@@ -50,7 +51,7 @@ max_sensors = max(max(x_de), max(x_hs))
 plt.scatter(x_de, y_de, s=40, facecolors='none', edgecolors='black', marker='o', label='Differential Evolution')
 plt.scatter(x_hs, y_hs_avg, s=15, color='black', marker='.', label='Harmony Search')
 
-plt.title("Comparação DE e HS: Instância 1")
+plt.title(f"Comparação DE e HS: Instância {instance_n}")
 plt.legend()    
 plt.xlim(0, max_sensors + 1)
 plt.ylim(0, 1.1)
