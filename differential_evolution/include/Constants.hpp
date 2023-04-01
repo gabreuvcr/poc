@@ -13,7 +13,7 @@ namespace Constants {
     const double MR_C = 0.15;
     const double CR_C = 0.95;
     const double FLIP_COIN = 0.5;
-    const int SEED = 1234;
+    const int SEED = 3842;
     // const int SEED = std::random_device{}();
 };
 

@@ -11,7 +11,7 @@ namespace Constants {
     const double A2 = 0;
     const double B1 = 1;
     const double B2 = 0.5;
-    const int SEED = 1234;
+    const int SEED = 3842;
     // const int SEED = std::random_device{}();
 };
 
