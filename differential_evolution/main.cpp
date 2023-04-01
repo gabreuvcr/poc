@@ -19,7 +19,10 @@ void remove_duplicate_from_pareto_front(std:: vector<Agent>& pareto_front) {
                 && a.coverage_ratio < b.coverage_ratio);
         }
     );
-    pareto_front.erase(std::unique(pareto_front.begin(), pareto_front.end()), pareto_front.end());
+    pareto_front.erase(
+        std::unique(pareto_front.begin(), pareto_front.end()), 
+        pareto_front.end()
+    );
 }
 
 void run_all(DifferentialEvolutionConfig config, std::vector<PointOfInterest> pois) {

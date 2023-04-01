@@ -3,6 +3,7 @@
 output.txt
 old/
 plots/
+utils/examples.txt
 input.txt
 todo.txt
 *.png
