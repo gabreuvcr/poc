@@ -11,7 +11,7 @@ x2 y2
 xn xn
 
 run command:
-./main <input_file> [-f <value>]
+./main <input_file> [-all ^ -f <value>]
 
 where:
 [ ] = optional

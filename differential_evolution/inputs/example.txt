@@ -11,13 +11,10 @@ x2 y2
 xn xn
 
 run command:
-./main <input_file> [-f <value>] [-t]
-./main inputs/g1.txt > output.txt && python3 ploting.py
+./main <input_file> [-all]
 
 where:
 [ ] = optional
 < > = required
 input_file = path to input file
--f = fixed number of sensors
-value = number of fixed sensors
--t = run tests
+-all = run tests

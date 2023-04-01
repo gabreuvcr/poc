@@ -1,0 +1,27 @@
+* de_ploting (Differential Evolution plot)
+    python3 de_ploting.py <path_output_de> <path_to_save_plot> <instance_name>
+
+    path_output_de format:
+    s1_1|c1_1;s1_2|c1_2;...;s1_n|c1_n;
+    s2_1|c2_1;s2_2|c2_2;...;s2_n|c2_n;
+    ...
+    s11_1|c11_1;s11_2|c11_2;...;c11_n|c11_n;
+
+    sI_J = number of sensors
+    cI_J = coverage in [0, 1];
+
+* hs_ploting (Harmony Search plot)
+    python3 hs_ploting.py <path_output_hs> <path_to_save_plot> <instance_name>
+
+    path_output_hs format:
+    s1|c_min_1|c_avg_1|c_max_1;...;sn|c_min_n|c_avg_n|c_max_n;
+
+    sI = number of sensors;
+    c_min_I = minimum coverage
+    c_avg_I = average coveragee
+    c_max_I = maximum coverage
+
+* de_hs_ploting (DE and HS comparison)
+    python3 de_hs_ploting.py <path_output_de> <path_output_hs> <path_to_save_plot> <instance_name>
+
+    path_output_de and path_output_hs are the same described above.
