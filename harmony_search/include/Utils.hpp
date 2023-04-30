@@ -11,9 +11,7 @@ namespace Utils {
     void log_population(
         int min_sensors, 
         int last_number_of_sensors, 
-        std::vector<double> coverage_min, 
-        std::vector<double> coverage_max, 
-        std::vector<double> coverage_average
+        std::vector<double> coverage_ratio
     );
     void log_time(std::chrono::duration<double> time);
     void log_seed(int seed);

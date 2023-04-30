@@ -5,7 +5,7 @@
 #include "PointOfInterest.hpp"
 #include "Utils.hpp"
 #include "Sensor.hpp"
-#include "Statistics.hpp"
+#include "Experiment.hpp"
 
 int main(int argc, char* argv[]) {
     std::string filename;
@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
     Sensor::set_values(radius, radius_err, config.W, config.H);
     
     if (all) {
-        Statistics::run_all_tests(config, pois);
+        Experiment::run_test(config, pois);
     } else if (fixed_sensors) {
         HarmonySearch hs = HarmonySearch(config, pois, num_fixed_sensors);
         double curr_coverage = hs.run();

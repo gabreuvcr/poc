@@ -8,15 +8,12 @@
 namespace Utils {
     void log_population(
         int min_sensors, 
-        int last_number_of_sensors, 
-        std::vector<double> coverage_min, 
-        std::vector<double> coverage_max, 
-        std::vector<double> coverage_average
+        int last_number_of_sensors,
+        std::vector<double> coverage_ratio
     ) {
         for (int i = min_sensors; i <= last_number_of_sensors; i++) {
-            std::cout << i << "|" << coverage_min[i] << "|";
-            std::cout << coverage_average[i] << "|";
-            std::cout << coverage_max[i] << ";";
+            std::cout << i << "|";
+            std::cout << coverage_ratio[i] << ";";
         }
         std::cout << std::endl;
     }
