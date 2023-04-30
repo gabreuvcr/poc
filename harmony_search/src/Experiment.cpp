@@ -59,7 +59,7 @@ namespace Experiment {
         for (int run = 0; run < RUNS; run++) {
             auto start_time = std::chrono::high_resolution_clock::now();
             for (int i = min_sensors; i <= last_number_of_sensors; i++) {
-                hs.set_num_fixed_sensors(i);
+                HarmonySearch hs = HarmonySearch(config, pois, i);
                 double curr_coverage = hs.run();
                 coverages[run][i] = curr_coverage;
                 if (curr_coverage == 1.0) {
@@ -71,9 +71,6 @@ namespace Experiment {
         }
         auto average_total_time = total_time / RUNS;
 
-        for (int run = 0; run < RUNS; run++) {
-            Utils::log_population(min_sensors, last_number_of_sensors, coverages[run]);
-        }
 
         std::vector<double> average_coverage = calculate_average_coverage(
             coverages,
@@ -87,6 +84,9 @@ namespace Experiment {
             last_number_of_sensors
         );
 
+        for (int run = 0; run < RUNS; run++) {
+            Utils::log_population(min_sensors, last_number_of_sensors, coverages[run]);
+        }
         Utils::log_population(
             min_sensors, 
             last_number_of_sensors,
