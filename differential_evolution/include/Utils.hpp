@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <chrono>
 #include "DifferentialEvolutionConfig.hpp"
 #include "PointOfInterest.hpp"
 #include "Agent.hpp"

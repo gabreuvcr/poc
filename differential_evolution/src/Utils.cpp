@@ -1,7 +1,6 @@
 #include <fstream>
 #include <string.h>
 #include <vector>
-#include <chrono>
 #include "Utils.hpp"
 
 namespace Utils {
@@ -9,15 +8,12 @@ namespace Utils {
         for (int i = 0; i < population.size(); i++) {
             std::cout << population[i].num_active_sensors << "|";
             std::cout << population[i].coverage_ratio << ";";
-            // if (i != population.size() - 1) {
-            //     std::cout << ";";
-            // }
         }
         std::cout << std::endl;
     }
 
     void log_time(std::chrono::duration<double> time) {
-        std::cout << "Average time: " << time.count() << " s" << std::endl;
+        std::cout << "Total time: " << time.count() << " s" << std::endl;
     }
 
     void log_seed(int seed) {
