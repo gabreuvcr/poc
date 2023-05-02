@@ -9,10 +9,10 @@
 DifferentialEvolution::DifferentialEvolution(DifferentialEvolutionConfig config, std::vector<PointOfInterest> pois) {
     this->config = config;
     this->pois = pois;
-    this->min_sensores = ceil(
+    this->min_sensors = ceil(
         (config.W / (2 * Sensor::max_radius)) * (config.H / (2 * Sensor::max_radius))
     );
-    this->max_sensores = ceil(
+    this->max_sensors = ceil(
         (config.W / (2 * Sensor::min_radius)) * (config.H / (2 * Sensor::min_radius))
     );
     this->population = std::vector<Agent>(config.pop_size);
@@ -31,8 +31,8 @@ std::vector<Sensor> DifferentialEvolution::mutation_sensors(int i) {
         c = Random::random_value(0, config.pop_size - 1);
     } while (c == i || c == a || c == b);
 
-    std::vector<Sensor> mutated_sensors(this->max_sensores);
-    for (int j = 0; j < this->max_sensores; j++) {
+    std::vector<Sensor> mutated_sensors(this->max_sensors);
+    for (int j = 0; j < this->max_sensors; j++) {
         //execute mutation: v_i = x_a + F(x_b - x_c)
         double x_a = population[a].sensors[j].x;
         double x_b = population[b].sensors[j].x;
@@ -56,11 +56,11 @@ std::vector<Sensor> DifferentialEvolution::mutation_sensors(int i) {
 }
 
 std::vector<Sensor> DifferentialEvolution::crossover_sensors(std::vector<Sensor> agent_sensors, std::vector<Sensor> mutated_sensors) {
-    int j_rand = Random::random_value(0, this->max_sensores - 1);
+    int j_rand = Random::random_value(0, this->max_sensors - 1);
 
-    std::vector<Sensor> crossed_sensors(this->max_sensores);
+    std::vector<Sensor> crossed_sensors(this->max_sensors);
 
-    for (int j = 0; j < this->max_sensores; j++) {
+    for (int j = 0; j < this->max_sensors; j++) {
         if (Random::random() <= Constants::CR_DE || j == j_rand) {
             crossed_sensors[j] = mutated_sensors[j];
         } else {
@@ -105,15 +105,15 @@ std::vector<bool> DifferentialEvolution::crossover_active_sensors(
         std::vector<bool> agent_active_sensors, 
         std::vector<bool> win_active_sensors
     ) {
-    std::vector<bool> child = std::vector<bool>(this->max_sensores);
-    for (int i = 0; i < this->max_sensores; i++) {
+    std::vector<bool> child = std::vector<bool>(this->max_sensors);
+    for (int i = 0; i < this->max_sensors; i++) {
         if (Random::random() <= Constants::FLIP_COIN) {
             child[i] = agent_active_sensors[i];
         } else {
             child[i] = win_active_sensors[i];
         }
     }
-    if (count_num_active_sensors(child) < this->min_sensores) {
+    if (count_num_active_sensors(child) < this->min_sensors) {
         return win_active_sensors;
     }
 
@@ -126,10 +126,10 @@ std::vector<bool> DifferentialEvolution::mutation_active_sensors(std::vector<boo
 
         int i = 0;
         do {
-            int random_sensor = Random::random_value(0, this->max_sensores - 1);
+            int random_sensor = Random::random_value(0, this->max_sensors - 1);
             mutated_active_sensors[random_sensor] = !active_sensors[random_sensor];
             i++;
-        } while (i < 2 || count_num_active_sensors(mutated_active_sensors) < this->min_sensores);
+        } while (i < 2 || count_num_active_sensors(mutated_active_sensors) < this->min_sensors);
 
         return mutated_active_sensors;
     }
@@ -293,15 +293,15 @@ std::vector<Agent> DifferentialEvolution::run() {
 
 void DifferentialEvolution::init_first_population() {
     for (int i = 0; i < population.size(); i++) {
-        std::vector<Sensor> new_sensors(max_sensores);
+        std::vector<Sensor> new_sensors(max_sensors);
 
-        for (int s = 0; s < max_sensores; s++) {
+        for (int s = 0; s < max_sensors; s++) {
             new_sensors[s] = Sensor::random_sensor();
         }
 
-        std::vector<bool> active_sensors(max_sensores, false);
+        std::vector<bool> active_sensors(max_sensors, false);
         
-        int num_active_sensors = Random::random_value(min_sensores, max_sensores);
+        int num_active_sensors = Random::random_value(min_sensors, max_sensors);
 
         for (int j = 0; j < num_active_sensors; j++) {
             active_sensors[j] = true;

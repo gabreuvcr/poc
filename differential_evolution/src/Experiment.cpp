@@ -62,8 +62,8 @@ namespace Experiment {
         
         double hyper_volume = calculate_hyper_volume(
             pareto_front,
-            de.min_sensores,
-            de.max_sensores
+            de.min_sensors,
+            de.max_sensors
         );
 
         Utils::log_population(pareto_front);
