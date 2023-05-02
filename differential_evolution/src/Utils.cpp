@@ -4,6 +4,10 @@
 #include "Utils.hpp"
 
 namespace Utils {
+    void log_hyper_volume(double hyper_volume) {
+        std::cout << "Hyper volume: " << hyper_volume << std::endl;
+    }
+
     void log_population(std::vector<Agent> population) {
         for (int i = 0; i < population.size(); i++) {
             std::cout << population[i].num_active_sensors << "|";

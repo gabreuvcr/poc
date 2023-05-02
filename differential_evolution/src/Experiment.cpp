@@ -21,6 +21,31 @@ namespace Experiment {
         );
     }
 
+    double calculate_hyper_volume(
+        std::vector<Agent> pareto_front,
+        int min_sensores,
+        int max_sensores
+    ) {
+        double hyper_volume = 0.0;
+        int last_numbers_of_sensors = pareto_front.back().num_active_sensors;
+
+        for (int i = 1; i < pareto_front.size(); i++) {
+            int x_b = pareto_front[i].num_active_sensors;
+            int x_a = pareto_front[i - 1].num_active_sensors;
+            double y_b = pareto_front[i].coverage_ratio;
+            double y_a = pareto_front[i - 1].coverage_ratio;
+
+            double dx = x_b - x_a;
+            double dy = y_b - y_a;
+            hyper_volume += (dx * dy * 0.5) + (dx * y_a);
+        }
+        for (int x_b = last_numbers_of_sensors + 1; x_b <= max_sensores; x_b++) {
+            hyper_volume += 1;
+        }
+
+        return hyper_volume;
+    }
+
     void run_test(DifferentialEvolutionConfig config, std::vector<PointOfInterest> pois) {
         DifferentialEvolution de = DifferentialEvolution(config, pois);
 
@@ -34,8 +59,15 @@ namespace Experiment {
         remove_duplicate_from_pareto_front(pareto_front);
             
         auto total_time = (end_time - start_time);
+        
+        double hyper_volume = calculate_hyper_volume(
+            pareto_front,
+            de.min_sensores,
+            de.max_sensores
+        );
 
         Utils::log_population(pareto_front);
+        Utils::log_hyper_volume(hyper_volume);
         Utils::log_time(total_time);
         Utils::log_seed(Constants::SEED);
     }

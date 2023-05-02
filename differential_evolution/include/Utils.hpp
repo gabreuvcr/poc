@@ -9,6 +9,7 @@
 #include "Agent.hpp"
 
 namespace Utils {
+    void log_hyper_volume(double hyper_volume);
     void log_population(std::vector<Agent> population);
     void log_time(std::chrono::duration<double> time);
     void log_seed(int seed);
