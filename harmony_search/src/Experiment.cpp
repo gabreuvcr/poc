@@ -44,6 +44,32 @@ namespace Experiment {
         return std_coverage;
     }
 
+    double calculate_hyper_volume(
+        std::vector<double> average_coverage,
+        int min_sensors,
+        int max_sensors,
+        int last_number_of_sensors
+    ) {
+        double hyper_volume = 0;
+
+        for (int x_b = min_sensors + 1; x_b <= max_sensors; x_b++) {
+            if (x_b > last_number_of_sensors) {
+                hyper_volume += 1;
+            } else {
+                int x_a = x_b - 1;
+                double y_a = average_coverage[x_a];
+                double y_b = average_coverage[x_b];
+
+                double dx = x_b - x_a;
+                double dy = abs(y_b - y_a);
+
+                hyper_volume += (dx * dy * 0.5) + (dx * y_a);
+            }
+        }
+
+        return hyper_volume;
+    }
+
     void run_test(HarmonySearchConfig config, std::vector<PointOfInterest> pois) {
         HarmonySearch hs = HarmonySearch(config, pois);
         
@@ -84,6 +110,13 @@ namespace Experiment {
             last_number_of_sensors
         );
 
+        double hyper_volume = calculate_hyper_volume(
+            average_coverage,
+            min_sensors,
+            max_sensors,
+            last_number_of_sensors
+        );
+
         for (int run = 0; run < RUNS; run++) {
             Utils::log_population(min_sensors, last_number_of_sensors, coverages[run]);
         }
@@ -97,6 +130,7 @@ namespace Experiment {
             last_number_of_sensors,
             std_coverage
         );
+        Utils::log_hyper_volume(hyper_volume);
         Utils::log_time(average_total_time);
         Utils::log_seed(Constants::SEED);
     }

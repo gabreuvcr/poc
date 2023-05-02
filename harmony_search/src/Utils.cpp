@@ -6,6 +6,10 @@
 #include "PointOfInterest.hpp"
 
 namespace Utils {
+    void log_hyper_volume(double hyper_volume) {
+        std::cout << "Hyper volume: " << hyper_volume << std::endl;
+    }
+    
     void log_population(
         int min_sensors, 
         int last_number_of_sensors,
