@@ -35,7 +35,7 @@ namespace Utils {
     }
 
     void invalid_arguments() {
-        throw std::runtime_error("Usage: ./main <input_file> < -all ^ -f <value> >");
+        throw std::runtime_error("Usage: ./main <input_file> < -t ^ -f <value> >");
         exit(1);
     }
 
@@ -43,7 +43,7 @@ namespace Utils {
         char *argv[], 
         int argc, 
         std::string &filename, 
-        bool &all, 
+        bool &test, 
         bool &fixed_sensors, 
         int &num_fixed_sensors
     ) {
@@ -53,7 +53,7 @@ namespace Utils {
 
         if (argc >= 3) {
             for (int i = 2; i < argc; i++) {
-                if (all || fixed_sensors) invalid_arguments();
+                if (test || fixed_sensors) invalid_arguments();
 
                 if (strcmp(argv[i], "-f") == 0) {
                     if (i + 1 >= argc || !is_number(argv[i + 1])) {
@@ -64,8 +64,8 @@ namespace Utils {
                     if (num_fixed_sensors <= 0) {
                         throw std::runtime_error("The number of fixed sensors must be a valid number");
                     }
-                } else if (strcmp(argv[i], "-all") == 0) {
-                    all = true;
+                } else if (strcmp(argv[i], "-t") == 0) {
+                    test = true;
                 } else {
                     invalid_arguments();
                 }

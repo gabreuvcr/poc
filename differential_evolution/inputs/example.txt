@@ -11,10 +11,10 @@ x2 y2
 xn xn
 
 run command:
-./main <input_file> [-all]
+./main <input_file> [-t]
 
 where:
 [ ] = optional
 < > = required
 input_file = path to input file
--all = run tests
+-t = run tests

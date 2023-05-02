@@ -9,9 +9,9 @@
 
 int main(int argc, char* argv[]) {
     std::string filename;
-    bool all = false;
+    bool test = false;
 
-    Utils::check_arguments(argv, argc, filename, all);
+    Utils::check_arguments(argv, argc, filename, test);
 
     std::ifstream file = Utils::open_file(filename);
 
@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
 
     Sensor::set_values(radius, radius_err, config.W, config.H);
 
-    if (all) {
+    if (test) {
         Experiment::run_test(config, pois);
     } else {
         DifferentialEvolution de = DifferentialEvolution(config, pois);

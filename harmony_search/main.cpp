@@ -10,9 +10,9 @@
 int main(int argc, char* argv[]) {
     std::string filename;
     bool fixed_sensors = false; int num_fixed_sensors = 0;
-    bool all = false;
+    bool test = false;
 
-    Utils::check_arguments(argv, argc, filename, all, fixed_sensors, num_fixed_sensors);
+    Utils::check_arguments(argv, argc, filename, test, fixed_sensors, num_fixed_sensors);
 
     std::ifstream file = Utils::open_file(filename);
 
@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
 
     Sensor::set_values(radius, radius_err, config.W, config.H);
     
-    if (all) {
+    if (test) {
         Experiment::run_test(config, pois);
     } else if (fixed_sensors) {
         HarmonySearch hs = HarmonySearch(config, pois, num_fixed_sensors);

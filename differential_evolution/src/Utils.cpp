@@ -25,21 +25,19 @@ namespace Utils {
     }
 
     void invalid_argument() {
-        throw std::runtime_error("Usage: ./main <input_file> [-all]");
+        throw std::runtime_error("Usage: ./main <input_file> [-t]");
         exit(1);
     }
     
-    void check_arguments(char *argv[], int argc, std::string &filename, bool &all) {
+    void check_arguments(char *argv[], int argc, std::string &filename, bool &test) {
         if (argc < 2) invalid_argument();
 
         if (argc >= 2) filename = argv[1];
         
         if (argc >= 3) {
             for (int i = 2; i < argc; i++) {
-                if (all) invalid_argument();
-
-                if (strcmp(argv[i], "-all") == 0) {
-                    all = true;
+                if (strcmp(argv[i], "-t") == 0) {
+                    test = true;
                 }
                 else {
                     invalid_argument();

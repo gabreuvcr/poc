@@ -20,7 +20,7 @@ namespace Utils {
         char *argv[], 
         int argc, 
         std::string &filename, 
-        bool &all, 
+        bool &test,
         bool &fixed_sensors, 
         int &fixed_sensors_num
     );
