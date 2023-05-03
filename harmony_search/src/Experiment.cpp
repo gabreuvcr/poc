@@ -51,10 +51,11 @@ namespace Experiment {
         int last_number_of_sensors
     ) {
         double hyper_volume = 0;
+        double last_average_coverage = average_coverage[last_number_of_sensors];
 
         for (int x_b = min_sensors + 1; x_b <= max_sensors; x_b++) {
             if (x_b > last_number_of_sensors) {
-                hyper_volume += 1;
+                hyper_volume += last_average_coverage;
             } else {
                 int x_a = x_b - 1;
                 double y_a = average_coverage[x_a];

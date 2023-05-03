@@ -28,6 +28,7 @@ namespace Experiment {
     ) {
         double hyper_volume = 0.0;
         int last_numbers_of_sensors = pareto_front.back().num_active_sensors;
+        double last_coverage_ratio = pareto_front.back().coverage_ratio;
 
         for (int i = 1; i < pareto_front.size(); i++) {
             int x_b = pareto_front[i].num_active_sensors;
@@ -40,7 +41,7 @@ namespace Experiment {
             hyper_volume += (dx * dy * 0.5) + (dx * y_a);
         }
         for (int x_b = last_numbers_of_sensors + 1; x_b <= max_sensores; x_b++) {
-            hyper_volume += 1;
+            hyper_volume += last_coverage_ratio;
         }
 
         return hyper_volume;
