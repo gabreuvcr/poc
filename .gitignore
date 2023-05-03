@@ -2,8 +2,6 @@
 .others/
 output.txt
 old/
-plots/
 input.txt
 todo.txt
-*.png
 main

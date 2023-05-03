@@ -97,7 +97,7 @@ plt.ylabel('% de cobertura')
 plt.hlines(y=1, linestyles='--', xmin=0, xmax=max_sensors+1, colors='#000', alpha=0.15)
 plt.tight_layout()
 plt.savefig(args.save_path, dpi=300)
-plt.close()
+# plt.close()
 
 if args.std:
     x, y = get_output_splited(lines[args.n_runs + 1])
